@@ -31,10 +31,5 @@ class MainActivity : ComponentActivity() {
         super.onResume()
 
         homeViewModel.loadBooks()
-        val wifi = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-
-        if (wifi.isWifiEnabled) {
-            wifi.isWifiEnabled = false
-        }
     }
 }

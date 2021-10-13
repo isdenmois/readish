@@ -18,6 +18,7 @@ import android.widget.Toast
 import android.content.Intent
 import android.net.Uri
 import android.net.wifi.WifiManager
+import com.isdenmois.readish.screens.transfers.TransferActivity
 import com.isdenmois.readish.shared.lib.MimeUtils
 import com.isdenmois.readish.shared.api.parser.BookFile
 import java.io.File
@@ -82,8 +83,7 @@ class HomeViewModel @Inject constructor(
             wifi.isWifiEnabled = true
         }
 
-        val intent = Intent().apply {
-            component = ComponentName("com.onyx", "com.onyx.reader.main.ui.MainActivity")
+        val intent = Intent(applicationContext, TransferActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
