@@ -4,8 +4,10 @@ import android.content.Context
 import com.isdenmois.readish.R
 import com.isdenmois.readish.shared.api.parser.BookFile
 import com.isdenmois.readish.shared.api.parser.BookParser
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
 val bookProjection = arrayOf(
     RecentTable.Column.id,
@@ -17,7 +19,9 @@ val bookProjection = arrayOf(
     RecentTable.Column.readTime,
 )
 
-class BookRepository(private val context: Context) {
+class BookRepository @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     suspend fun getCurrentBooks(limit: Int = 4): List<Book> {
         val cursor = context.contentResolver.query(
             RecentTable.URI,

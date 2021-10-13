@@ -12,11 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import org.koin.androidx.compose.getViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun TransfersScreen() {
-    val vm: TransfersViewModel = getViewModel()
+    val vm: TransfersViewModel = viewModel()
     val address by vm.addressState
     val qr by vm.qrState
 

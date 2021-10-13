@@ -18,11 +18,15 @@ import android.net.wifi.WifiManager
 import com.isdenmois.readish.screens.transfers.TransferActivity
 import com.isdenmois.readish.shared.lib.MimeUtils
 import com.isdenmois.readish.shared.api.parser.BookFile
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.lang.Exception
+import javax.inject.Inject
 
-class HomeViewModel(
-    private val applicationContext: Context,
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    @ApplicationContext private val applicationContext: Context,
     private val repository: BookRepository
 ) : ViewModel() {
     var bookList = mutableStateOf<Resource<List<Book>>>(Resource.loading(null))

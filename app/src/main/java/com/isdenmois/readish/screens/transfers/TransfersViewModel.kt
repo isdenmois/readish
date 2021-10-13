@@ -21,6 +21,8 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.isdenmois.readish.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -33,9 +35,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import java.io.File
+import javax.inject.Inject
 
-class TransfersViewModel (
-    private val applicationContext: Context
+@HiltViewModel
+class TransfersViewModel @Inject constructor(
+    @ApplicationContext private val applicationContext: Context
 ) : ViewModel() {
     val addressState = mutableStateOf("")
     val qrState = mutableStateOf<ImageBitmap?>(null)
