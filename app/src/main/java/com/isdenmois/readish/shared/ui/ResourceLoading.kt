@@ -40,3 +40,4 @@ fun <T> ResourceLoading(resource: Resource<T>, content: @Composable (data: T) ->
         }
     }
 }
+

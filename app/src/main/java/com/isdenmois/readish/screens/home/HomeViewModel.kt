@@ -9,10 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.isdenmois.readish.shared.api.alreader.Book
 import com.isdenmois.readish.shared.api.alreader.BookRepository
 import com.isdenmois.readish.shared.api.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import android.widget.Toast
 
 import android.content.Intent
@@ -24,9 +21,8 @@ import com.isdenmois.readish.shared.api.parser.BookFile
 import java.io.File
 import java.lang.Exception
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    @ApplicationContext private val applicationContext: Context,
+class HomeViewModel(
+    private val applicationContext: Context,
     private val repository: BookRepository
 ) : ViewModel() {
     var bookList = mutableStateOf<Resource<List<Book>>>(Resource.loading(null))

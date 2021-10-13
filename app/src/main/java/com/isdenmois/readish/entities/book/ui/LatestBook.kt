@@ -16,7 +16,7 @@ import com.isdenmois.readish.shared.ui.noRippleClickable
 fun LatestBook(book: Book, onClick: () -> Unit) {
     Column(modifier = Modifier.noRippleClickable(onClick = onClick)) {
         Row {
-            EbookCover(path = book.path, size = 124.dp, width = 80.dp)
+            EbookCover(bitmap = book.cover, size = 124.dp, width = 80.dp)
 
             Column(
                 verticalArrangement = Arrangement.Center,

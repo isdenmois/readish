@@ -21,8 +21,6 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.isdenmois.readish.R
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -35,12 +33,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import java.io.File
-import java.net.NetworkInterface
-import javax.inject.Inject
 
-@HiltViewModel
-class TransfersViewModel @Inject constructor(
-    @ApplicationContext private val applicationContext: Context
+class TransfersViewModel (
+    private val applicationContext: Context
 ) : ViewModel() {
     val addressState = mutableStateOf("")
     val qrState = mutableStateOf<ImageBitmap?>(null)
@@ -88,20 +83,23 @@ class TransfersViewModel @Inject constructor(
 
     init {
         coroutineContext.launch {
-            server.start(wait = true)
+            server.start()
         }
 
         enableWifi()
 
-        val filter = IntentFilter()
-        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        val filter = IntentFilter().apply {
+            addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+            addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        }
+
         applicationContext.registerReceiver(receiver, filter)
     }
 
     override fun onCleared() {
         super.onCleared()
         server.stop(1000, 10000)
+        applicationContext.unregisterReceiver(receiver)
         disableWifi()
     }
 
@@ -112,7 +110,8 @@ class TransfersViewModel @Inject constructor(
     }
 
     private fun checkLocalAddress() {
-        val address = getIpAddressInLocalNetwork() ?: ""
+        val address = getIpAddressInLocalNetwork() ?: return
+
         addressState.value = "http://$address:$port"
 
         try {
@@ -123,18 +122,16 @@ class TransfersViewModel @Inject constructor(
         }
     }
 
-    private fun getIpAddressInLocalNetwork(): String? {
-        val networkInterfaces = NetworkInterface.getNetworkInterfaces().iterator().asSequence()
-        val localAddresses = networkInterfaces.flatMap {
-            it.inetAddresses.asSequence()
-                .filter { inetAddress ->
-                    inetAddress.isSiteLocalAddress && !inetAddress.hostAddress.contains(":") &&
-                            inetAddress.hostAddress != "127.0.0.1"
-                }
-                .map { inetAddress -> inetAddress.hostAddress }
-        }
+    private fun getIpAddressInLocalNetwork(): String {
+        val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
+        val ipAddress = wifiManager.connectionInfo.ipAddress
 
-        return localAddresses.firstOrNull()
+        return "%d.%d.%d.%d".format(
+            ipAddress and 0xff,
+            ipAddress shr 8 and 0xff,
+            ipAddress shr 16 and 0xff,
+            ipAddress shr 24 and 0xff
+        )
     }
 
     private fun getNetworkQR(str: String): Bitmap? {
@@ -161,18 +158,18 @@ class TransfersViewModel @Inject constructor(
     }
 
     private fun enableWifi() {
-        val wifi = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
 
-        if (!wifi.isWifiEnabled) {
-            wifi.isWifiEnabled = true
+        if (!wifiManager.isWifiEnabled) {
+            wifiManager.isWifiEnabled = true
         }
     }
 
     private fun disableWifi() {
-        val wifi = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
 
-        if (wifi.isWifiEnabled) {
-            wifi.isWifiEnabled = false
+        if (wifiManager.isWifiEnabled) {
+            wifiManager.isWifiEnabled = false
         }
     }
 }

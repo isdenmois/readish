@@ -1,9 +1,13 @@
 package com.isdenmois.readish.app
 
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import com.isdenmois.readish.screens.home.HomeViewModel
+import com.isdenmois.readish.screens.transfers.TransfersViewModel
+import com.isdenmois.readish.shared.api.alreader.BookRepository
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-@Module
-@InstallIn(ActivityComponent::class)
-class MainModule
+val appModule = module {
+    single { BookRepository(get()) }
+    viewModel { HomeViewModel(get(), get()) }
+    viewModel { TransfersViewModel(get()) }
+}

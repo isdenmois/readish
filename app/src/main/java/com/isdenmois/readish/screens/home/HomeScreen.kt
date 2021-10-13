@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.isdenmois.readish.R
 import com.isdenmois.readish.entities.book.ui.CurrentBook
 import com.isdenmois.readish.entities.book.ui.LatestBook
@@ -22,9 +21,10 @@ import com.isdenmois.readish.shared.api.alreader.Book
 import com.isdenmois.readish.shared.api.parser.BookFile
 import com.isdenmois.readish.shared.ui.Icon
 import com.isdenmois.readish.shared.ui.noRippleClickable
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun HomeScreen(vm: HomeViewModel = viewModel()) {
+fun HomeScreen(vm: HomeViewModel = getViewModel()) {
     val bookList by vm.bookList
     val fileList by vm.fileList
 
