@@ -1,6 +1,5 @@
 package com.isdenmois.readish.screens.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,6 +19,8 @@ import com.isdenmois.readish.entities.book.ui.LatestBook
 import com.isdenmois.readish.entities.file.ui.BookFileItem
 import com.isdenmois.readish.shared.ui.ResourceLoading
 import com.isdenmois.readish.shared.api.alreader.Book
+import com.isdenmois.readish.shared.api.parser.BookFile
+import com.isdenmois.readish.shared.ui.Icon
 import com.isdenmois.readish.shared.ui.noRippleClickable
 
 @Composable
@@ -34,32 +34,17 @@ fun HomeScreen(vm: HomeViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Image(
-                painter = painterResource(R.drawable.ic_lamp),
-                contentDescription = "Brightness",
-                modifier = Modifier
-                    .size(32.dp)
-                    .noRippleClickable { vm.showSystemBrightnessDialog() }
+            Icon(
+                title = "Brightness",
+                icon = R.drawable.ic_lightbulb,
+                onClick = { vm.showSystemBrightnessDialog() }
             )
 
-            Spacer(modifier = Modifier.width(24.dp))
-
-            Image(
-                painter = painterResource(R.drawable.ic_transfer),
-                contentDescription = "Transfers",
-                modifier = Modifier
-                    .size(32.dp)
-                    .noRippleClickable { vm.openTransfers() }
-            )
-
-            Spacer(modifier = Modifier.width(24.dp))
-
-            Image(
-                painter = painterResource(R.drawable.ic_external_link),
-                contentDescription = "System app",
-                modifier = Modifier
-                    .size(32.dp)
-                    .noRippleClickable { vm.openOnyxHome() }
+            Icon(
+                title = "Applications",
+                icon = R.drawable.ic_apps,
+                isLast = true,
+                onClick = { vm.openOnyxHome() }
             )
         }
 
@@ -70,19 +55,28 @@ fun HomeScreen(vm: HomeViewModel = viewModel()) {
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Latest added", fontSize = 32.sp)
+
+        Row(modifier = Modifier.noRippleClickable { vm.openTransfers() }) {
+            Text("Latest added", fontSize = 32.sp)
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         ResourceLoading(resource = fileList) { files ->
-            LazyRow() {
-                itemsIndexed(files) { index, item ->
-                    if (index != 0) {
-                        Spacer(modifier = Modifier.width(24.dp))
-                    }
+            LatestAdded(files, vm)
+        }
+    }
+}
 
-                    BookFileItem(item, onClick = { vm.openBook(item.path) })
-                }
+@Composable
+private fun LatestAdded(files: List<BookFile>, vm: HomeViewModel) {
+    LazyRow {
+        itemsIndexed(files) { index, item ->
+            if (index != 0) {
+                Spacer(modifier = Modifier.width(24.dp))
             }
+
+            BookFileItem(item, onClick = { vm.openBook(item.path) })
         }
     }
 }
