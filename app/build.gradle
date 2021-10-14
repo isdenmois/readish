@@ -83,6 +83,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hilt_version") {
         exclude module: "dagger-lint-aar"
     }
+    implementation 'org.nanohttpd:nanohttpd-project:2.3.1'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07'
 
@@ -92,11 +93,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-    implementation "io.ktor:ktor:$ktor_version"
-    implementation "io.ktor:ktor-server-cio:$ktor_version"
-    implementation "io.ktor:ktor-server-core:$ktor_version"
-
     implementation 'com.google.zxing:core:3.4.1'
+    implementation "org.nanohttpd:nanohttpd-project:$httpd_version"
+    implementation "org.nanohttpd:nanohttpd-nanolets:$httpd_version"
 }
 
 configurations {

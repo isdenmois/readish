@@ -1,7 +1,6 @@
 package com.isdenmois.readish.shared.api.parser
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import com.isdenmois.readish.shared.lib.BitmapDecoder
 import org.xmlpull.v1.XmlPullParser
@@ -9,6 +8,7 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.File
 import java.io.InputStream
 import java.util.zip.ZipEntry
+import java.util.zip.ZipException
 import java.util.zip.ZipFile
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -22,9 +22,16 @@ class EPUBParser(private val path: String) : IBookParser {
         if (!file.canRead()) {
             return null
         }
+        Log.d("EPUBParser", "Open file: $path")
 
         val start = System.currentTimeMillis()
-        zipFile = ZipFile(file)
+
+        try {
+            zipFile = ZipFile(file)
+        } catch (e: ZipException) {
+            e.printStackTrace()
+            return null
+        }
 
         zipFile.use {
             val xpp = getXpp() ?: return null

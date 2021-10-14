@@ -34,5 +34,9 @@ fun TransfersScreen() {
         }
 
         Text(address, fontSize = 32.sp)
+
+         if (address.isBlank()) {
+             Text("WiFi is turning on")
+         }
     }
 }

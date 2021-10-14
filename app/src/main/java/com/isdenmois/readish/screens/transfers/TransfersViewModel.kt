@@ -9,32 +9,18 @@ import android.graphics.Color.BLACK
 import android.graphics.Color.WHITE
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
-import android.os.Build
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.isdenmois.readish.R
+import com.isdenmois.readish.shared.lib.HTTPD
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.server.engine.*
-import io.ktor.server.cio.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +33,6 @@ class TransfersViewModel @Inject constructor(
     private val size = 512
     private val port = 8083
 
-    private val coroutineContext = viewModelScope + Dispatchers.IO
     private val uploadsDir by lazy {
         applicationContext.getString(R.string.books_dir)
     }
@@ -59,38 +44,11 @@ class TransfersViewModel @Inject constructor(
     }
 
     private val server by lazy {
-        embeddedServer(CIO, port, watchPaths = emptyList()) {
-            routing {
-                get("/") {
-                    call.respondText("All good here in ${Build.MODEL}", ContentType.Text.Plain)
-                }
-
-                post("/upload") {
-                    val multipartData = call.receiveMultipart()
-
-                    multipartData.forEachPart { part ->
-                        if (part is PartData.FileItem) {
-                            val fileName = part.originalFileName as String
-                            val output = File(uploadsDir, fileName)
-
-                            part.streamProvider().copyTo(
-                                output.outputStream().buffered()
-                            )
-
-                            logAboutFileReceive(fileName)
-                        }
-                    }
-
-                    call.respondText("{ \"ok\": true }", ContentType.Application.Json)
-                }
-            }
-        }
+        HTTPD(uploadsDir)
     }
 
     init {
-        coroutineContext.launch {
-            server.start()
-        }
+        server.start()
 
         enableWifi()
 
@@ -104,15 +62,9 @@ class TransfersViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        server.stop(1000, 10000)
+        server.stop()
         applicationContext.unregisterReceiver(receiver)
         disableWifi()
-    }
-
-    private fun logAboutFileReceive(fileName: String) {
-        viewModelScope.launch {
-            Toast.makeText(applicationContext, "File $fileName received", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun checkLocalAddress() {

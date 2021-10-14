@@ -4,7 +4,7 @@ buildscript {
         kotlin_version = '1.5.31'
         hilt_version = '2.39.1'
         compose_version = '1.0.4'
-        ktor_version = '1.6.4'
+        httpd_version = '2.3.1'
     }
     repositories {
         google()
