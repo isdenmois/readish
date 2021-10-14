@@ -30,7 +30,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
-import io.ktor.server.jetty.*
+import io.ktor.server.cio.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -59,7 +59,7 @@ class TransfersViewModel @Inject constructor(
     }
 
     private val server by lazy {
-        embeddedServer(Jetty, port, watchPaths = emptyList()) {
+        embeddedServer(CIO, port, watchPaths = emptyList()) {
             routing {
                 get("/") {
                     call.respondText("All good here in ${Build.MODEL}", ContentType.Text.Plain)
@@ -71,8 +71,10 @@ class TransfersViewModel @Inject constructor(
                     multipartData.forEachPart { part ->
                         if (part is PartData.FileItem) {
                             val fileName = part.originalFileName as String
+                            val output = File(uploadsDir, fileName)
+
                             part.streamProvider().copyTo(
-                                File("$uploadsDir/$fileName").outputStream()
+                                output.outputStream().buffered()
                             )
 
                             logAboutFileReceive(fileName)
@@ -114,7 +116,13 @@ class TransfersViewModel @Inject constructor(
     }
 
     private fun checkLocalAddress() {
-        val address = getIpAddressInLocalNetwork() ?: return
+        val address = getIpAddressInLocalNetwork()
+
+        if (address.isBlank() || address == "0.0.0.0") {
+            addressState.value = ""
+            qrState.value = null
+            return
+        }
 
         addressState.value = "http://$address:$port"
 
