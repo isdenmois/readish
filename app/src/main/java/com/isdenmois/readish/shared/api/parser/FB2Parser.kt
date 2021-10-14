@@ -5,6 +5,7 @@ import android.util.Base64;
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.isdenmois.readish.shared.lib.BitmapDecoder
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.BufferedInputStream
@@ -69,7 +70,7 @@ class FB2Parser(val path: String) : IBookParser {
         zipFile?.close()
 
         if (decode != null) {
-            bitmap = BitmapFactory.decodeByteArray(decode, 0, decode.size)
+            bitmap = BitmapDecoder.decodeByteArray(decode)
         }
 
         Log.d("TextReader/FB2", "Parse took " + (System.currentTimeMillis() - start));

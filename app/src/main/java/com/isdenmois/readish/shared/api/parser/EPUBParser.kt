@@ -3,6 +3,7 @@ package com.isdenmois.readish.shared.api.parser
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.isdenmois.readish.shared.lib.BitmapDecoder
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.File
@@ -68,7 +69,7 @@ class EPUBParser(private val path: String) : IBookParser {
             var cover: Bitmap? = null
 
             coverStream?.use {
-                cover = BitmapFactory.decodeStream(coverStream)
+                cover = BitmapDecoder.decodeStream(coverStream)
             }
 
             val file = BookFile(
