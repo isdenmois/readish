@@ -21,3 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -allowaccessmodification
 -optimizations !code/simplification/arithmetic
+-dontwarn kotlin.reflect.**
+-dontwarn kotlin.internal.jdk7.**
+-dontwarn org.slf4j.**
+
