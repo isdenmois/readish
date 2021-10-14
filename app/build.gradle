@@ -5,6 +5,9 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
 android {
     compileSdk 30
 
@@ -12,12 +15,22 @@ android {
         applicationId "com.isdenmois.readish"
         minSdk 28
         targetSdk 30
-        versionCode 11
+        versionCode 14
         versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
+        }
+    }
+
+    signingConfigs {
+        release {
+            assert properties['KEY_STORE_FILE'];
+            storeFile file(properties['KEY_STORE_FILE'])
+            storePassword properties['KEY_PASSWORD']
+            keyAlias properties['KEY_ALIAS']
+            keyPassword properties['KEY_PASSWORD']
         }
     }
 

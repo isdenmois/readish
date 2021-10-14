@@ -10,3 +10,8 @@
 local.properties
 *.apk
 /app/release
+.env
+
+/fastlane/README.md
+/fastlane/report.xml
+
