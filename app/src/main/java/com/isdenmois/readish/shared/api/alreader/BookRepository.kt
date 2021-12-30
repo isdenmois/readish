@@ -5,6 +5,8 @@ import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.ebookparser.EBookParser
 import com.isdenmois.readish.R
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -22,7 +24,7 @@ val bookProjection = arrayOf(
 class BookRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    suspend fun getCurrentBooks(limit: Int = 4): List<Book> {
+    suspend fun getCurrentBooks(limit: Int = 4): List<Book> = withContext(Dispatchers.Default) {
         val cursor = context.contentResolver.query(
             RecentTable.URI,
             bookProjection,
@@ -57,13 +59,13 @@ class BookRepository @Inject constructor(
             }
         }
 
-        return result
+        return@withContext result
     }
 
-    suspend fun getLatestAddedBooks(limit: Int = 6): List<EBookFile> {
+    suspend fun getLatestAddedBooks(limit: Int = 6): List<EBookFile> = withContext(Dispatchers.Default) {
         val files = File(context.getString(R.string.books_dir)).listFiles()
 
-        return files
+        return@withContext files
             ?.filter { it.name.endsWith("fb2") || it.name.endsWith("epub") }
             ?.sortedByDescending { it.lastModified() }
             ?.take(limit)
