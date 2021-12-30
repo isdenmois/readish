@@ -17,16 +17,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.R
-import com.isdenmois.readish.shared.api.parser.BookFile
 import com.isdenmois.readish.shared.ui.noRippleClickable
 
 @Composable
-fun BookFileItem(file: BookFile, onClick: () -> Unit) {
+fun BookFileItem(file: EBookFile, onClick: () -> Unit) {
     val loadingPainter = painterResource(R.drawable.ic_loading)
     val painter = remember(file.cover) {
-        if (file.cover != null) {
-            BitmapPainter(file.cover.asImageBitmap())
+        if (file.cover !== null) {
+            BitmapPainter(file.cover!!.asImageBitmap())
         } else {
             loadingPainter
         }

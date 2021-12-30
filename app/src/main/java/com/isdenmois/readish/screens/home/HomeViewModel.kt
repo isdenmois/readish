@@ -15,9 +15,9 @@ import android.widget.Toast
 import android.content.Intent
 import android.net.Uri
 import android.net.wifi.WifiManager
+import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.screens.transfers.TransferActivity
 import com.isdenmois.readish.shared.lib.MimeUtils
-import com.isdenmois.readish.shared.api.parser.BookFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
     var bookList = mutableStateOf<Resource<List<Book>>>(Resource.loading(null))
-    var fileList = mutableStateOf<Resource<List<BookFile>>>(Resource.loading(null))
+    var fileList = mutableStateOf<Resource<List<EBookFile>>>(Resource.loading(null))
 
     fun loadBooks() {
         bookList.value = Resource.loading()
@@ -56,9 +56,8 @@ class HomeViewModel @Inject constructor(
         applicationContext.startActivity(intent)
     }
 
-    fun openBook(path: String) {
+    fun openBook(file: File) {
         val packageManager = applicationContext.packageManager
-        val file = File(path)
         val uri = Uri.fromFile(file)
         val type = MimeUtils.getByFileName(file.name)
 

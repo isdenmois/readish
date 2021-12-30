@@ -1,6 +1,7 @@
 package com.isdenmois.readish.shared.api.alreader
 
 import android.graphics.Bitmap
+import java.io.File
 
 data class Book(
     val id: Int,
@@ -9,7 +10,7 @@ data class Book(
     val size: Int,
     val position: Int,
     val readTime: Int,
-    val path: String,
+    val file: File,
     val cover: Bitmap?,
 ) {
     val percent = position.toFloat() / size

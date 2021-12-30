@@ -2,9 +2,10 @@
 buildscript {
     ext {
         kotlin_version = '1.5.31'
-        hilt_version = '2.39.1'
-        compose_version = '1.0.4'
+        hilt_version = '2.40.5'
+        compose_version = '1.0.5'
         httpd_version = '2.3.1'
+        bookparser_version = '0.5.0'
     }
     repositories {
         google()

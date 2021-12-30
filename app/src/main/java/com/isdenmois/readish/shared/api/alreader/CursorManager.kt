@@ -1,6 +1,7 @@
 package com.isdenmois.readish.shared.api.alreader
 
 import android.database.Cursor
+import java.io.File
 
 object CursorManager {
     fun getInt(cursor: Cursor, column: String): Int {
@@ -33,14 +34,14 @@ object CursorManager {
         return cursor.getString(index)
     }
 
-    fun getPath(cursor: Cursor, column: String): String {
+    fun getFile(cursor: Cursor, column: String): File {
         val path = getString(cursor, column)
         val index = path.indexOf('')
 
         if (index > 0) {
-            return path.substring(0, index)
+            return File(path.substring(0, index))
         }
 
-        return path
+        return File(path)
     }
 }

@@ -13,13 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.R
 import com.isdenmois.readish.entities.book.ui.CurrentBook
 import com.isdenmois.readish.entities.book.ui.LatestBook
 import com.isdenmois.readish.entities.file.ui.BookFileItem
 import com.isdenmois.readish.shared.ui.ResourceLoading
 import com.isdenmois.readish.shared.api.alreader.Book
-import com.isdenmois.readish.shared.api.parser.BookFile
 import com.isdenmois.readish.shared.ui.Icon
 import com.isdenmois.readish.shared.ui.noRippleClickable
 
@@ -70,14 +70,14 @@ fun HomeScreen() {
 }
 
 @Composable
-private fun LatestAdded(files: List<BookFile>, vm: HomeViewModel) {
+private fun LatestAdded(files: List<EBookFile>, vm: HomeViewModel) {
     LazyRow {
         itemsIndexed(files) { index, item ->
             if (index != 0) {
                 Spacer(modifier = Modifier.width(24.dp))
             }
 
-            BookFileItem(item, onClick = { vm.openBook(item.path) })
+            BookFileItem(item, onClick = { vm.openBook(item.file) })
         }
     }
 }
@@ -112,7 +112,7 @@ fun MyBooks(books: List<Book>, vm: HomeViewModel) {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                LatestBook(book, onClick = { vm.openBook(book.path) })
+                LatestBook(book, onClick = { vm.openBook(book.file) })
             }
         }
     }

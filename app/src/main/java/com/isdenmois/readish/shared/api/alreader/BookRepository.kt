@@ -1,9 +1,9 @@
 package com.isdenmois.readish.shared.api.alreader
 
 import android.content.Context
+import com.isdenmois.ebookparser.EBookFile
+import com.isdenmois.ebookparser.EBookParser
 import com.isdenmois.readish.R
-import com.isdenmois.readish.shared.api.parser.BookFile
-import com.isdenmois.readish.shared.api.parser.BookParser
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.util.*
@@ -37,8 +37,8 @@ class BookRepository @Inject constructor(
             cursor.moveToFirst()
 
             while (!cursor.isAfterLast) {
-                val path = CursorManager.getPath(cursor, RecentTable.Column.path)
-                val parsed = parseFile(path)
+                val file = CursorManager.getFile(cursor, RecentTable.Column.path)
+                val parsed = parseFile(file)
 
                 result.add(
                     Book(
@@ -47,7 +47,7 @@ class BookRepository @Inject constructor(
                         author = CursorManager.getString(cursor, RecentTable.Column.author),
                         size = CursorManager.getInt(cursor, RecentTable.Column.bookSize),
                         position = CursorManager.getInt(cursor, RecentTable.Column.position),
-                        path = path,
+                        file = file,
                         readTime = CursorManager.getInt(cursor, RecentTable.Column.readTime),
                         cover = parsed?.cover,
                     )
@@ -60,26 +60,26 @@ class BookRepository @Inject constructor(
         return result
     }
 
-    suspend fun getLatestAddedBooks(limit: Int = 6): List<BookFile> {
+    suspend fun getLatestAddedBooks(limit: Int = 6): List<EBookFile> {
         val files = File(context.getString(R.string.books_dir)).listFiles()
 
         return files
             ?.filter { it.name.endsWith("fb2") || it.name.endsWith("epub") }
             ?.sortedByDescending { it.lastModified() }
             ?.take(limit)
-            ?.mapNotNull { parseFile(it.path) }
+            ?.mapNotNull { parseFile(it) }
             ?.toList() ?: listOf()
     }
 
-    private val parsed = WeakHashMap<String, BookFile?>()
-    private fun parseFile(path: String): BookFile? {
-        if (parsed.containsKey(path)){
-            return parsed[path]
+    private val parsed = WeakHashMap<String, EBookFile?>()
+    private fun parseFile(file: File): EBookFile? {
+        if (parsed.containsKey(file.path)){
+            return parsed[file.path]
         }
 
-        val data = BookParser.getParser(path).parse()
+        val data = EBookParser.parseBook(file)
 
-        parsed[path] = data
+        parsed[file.path] = data
 
         return data
     }
