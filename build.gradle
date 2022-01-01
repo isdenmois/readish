@@ -1,23 +1,41 @@
+import static de.fayard.refreshVersions.core.Versions.versionFor
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        kotlin_version = '1.5.31'
-        hilt_version = '2.40.5'
-        compose_version = '1.0.5'
-        httpd_version = '2.3.1'
-        bookparser_version = '0.5.0'
+        compose_version = versionFor(AndroidX.compose.ui)
     }
+
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath "com.android.tools.build:gradle:_"
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:_'
+        classpath Google.dagger.hilt.android.gradlePlugin
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id "org.jlleitschuh.gradle.ktlint"
+}
+
+subprojects {
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+    ktlint {
+        android = true
+        ignoreFailures = true
+        enableExperimentalRules = true
+
+        filter {
+            exclude("**/generated/**")
+            include("**/kotlin/**")
+        }
     }
 }
 

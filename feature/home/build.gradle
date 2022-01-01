@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        minSdk 28
+        targetSdk 31
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
+}
+
+dependencies {
+    implementation AndroidX.core.ktx
+    implementation AndroidX.compose.ui
+    implementation AndroidX.compose.material
+    implementation AndroidX.compose.ui.toolingPreview
+    implementation AndroidX.lifecycle.runtimeKtx
+    implementation AndroidX.activity.compose
+
+    implementation(Google.dagger.hilt.android) {
+        exclude module: "dagger-lint-aar"
+    }
+    kapt Google.dagger.hilt.compiler
+    implementation AndroidX.lifecycle.viewModelCompose
+
+    implementation "com.github.isdenmois:EBookParser:_"
+
+    implementation(project(':shared'))
+    implementation(project(':feature:transfers'))
+}
