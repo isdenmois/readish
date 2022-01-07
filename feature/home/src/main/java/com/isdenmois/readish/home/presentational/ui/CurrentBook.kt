@@ -23,7 +23,8 @@ fun CurrentBook(book: Book, onClick: () -> Unit) {
         modifier = Modifier.noRippleClickable(onClick = onClick),
     ) {
         Box {
-            EbookCover(bitmap = book.cover, size = 360.dp)
+            EbookCover(cover = book.cover, ext = book.file.extension, size = 360.dp)
+
             Text(
                 "${book.page} / ${book.pages}",
                 fontSize = 18.sp,

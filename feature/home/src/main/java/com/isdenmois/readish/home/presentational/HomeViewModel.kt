@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isdenmois.ebookparser.EBookFile
+import com.isdenmois.ebookparser.EBookParser
 import com.isdenmois.readish.home.model.Book
 import com.isdenmois.readish.home.model.MimeUtils
 import com.isdenmois.readish.home.model.Resource
@@ -30,6 +31,10 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     var bookList = mutableStateOf<Resource<List<Book>>>(Resource.loading(null))
     var fileList = mutableStateOf<Resource<List<EBookFile>>>(Resource.loading(null))
+
+    init {
+        EBookParser.cacheDirectory = applicationContext.cacheDir
+    }
 
     fun loadBooks() {
         bookList.value = Resource.loading()
