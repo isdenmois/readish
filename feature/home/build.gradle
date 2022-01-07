@@ -44,6 +44,7 @@ dependencies {
     }
     kapt Google.dagger.hilt.compiler
     implementation AndroidX.lifecycle.viewModelCompose
+    implementation 'javax.annotation:javax.annotation-api:_'
 
     implementation "com.github.isdenmois:EBookParser:_"
 
