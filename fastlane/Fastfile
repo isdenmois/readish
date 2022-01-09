@@ -19,6 +19,7 @@ platform :android do
 
   desc 'Build '
   lane :build_apk do
+    delete_files(file_pattern: '**/*.apk')
     gradle(
       task: "assembleRelease",
       properties: {

@@ -4,3 +4,4 @@
 
 gem 'fastlane-plugin-upload_to_server'
 gem 'fastlane-plugin-increment_version_code'
+gem 'fastlane-plugin-delete_files'
