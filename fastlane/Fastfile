@@ -17,6 +17,11 @@ platform :android do
     git_commit(path: './app/build.gradle', message: 'Version Bump')
   end
 
+  desc 'Print apk size'
+  lane :print_apk_size do
+    puts("Apk size: #{File.size(lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]) / 1048576}Mb")
+  end
+
   desc 'Build '
   lane :build_apk do
     delete_files(file_pattern: '**/*.apk')
@@ -29,6 +34,7 @@ platform :android do
           "android.injected.signing.key.password" => ENV["KEY_PASSWORD"],
       }
     )
+    print_apk_size
   end
 
   desc 'Deploy a new version'
@@ -36,5 +42,6 @@ platform :android do
     version_increment
     build_apk
     upload
+    print_apk_size
   end
 end
