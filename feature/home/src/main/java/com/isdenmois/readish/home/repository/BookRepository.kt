@@ -4,12 +4,14 @@ import android.content.Context
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.ebookparser.EBookParser
 import com.isdenmois.readish.home.R
+import com.isdenmois.readish.home.lib.EBookCache
+import com.isdenmois.readish.home.model.Book
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 val bookProjection = arrayOf(
     RecentTable.Column.id,
@@ -22,9 +24,10 @@ val bookProjection = arrayOf(
 )
 
 class BookRepository @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val cache: EBookCache,
 ) {
-    suspend fun getCurrentBooks(limit: Int = 4): List<com.isdenmois.readish.home.model.Book> = withContext(
+    suspend fun getCurrentBooks(limit: Int = 4): List<Book> = withContext(
         Dispatchers.Default
     ) {
         val cursor = context.contentResolver.query(
@@ -35,7 +38,7 @@ class BookRepository @Inject constructor(
             "${RecentTable.Column.updatedAt} DESC LIMIT $limit",
             null,
         )
-        val result = mutableListOf<com.isdenmois.readish.home.model.Book>()
+        val result = mutableListOf<Book>()
 
         cursor?.use {
             cursor.moveToFirst()
@@ -45,7 +48,7 @@ class BookRepository @Inject constructor(
                 val parsed = parseFile(file)
 
                 result.add(
-                    com.isdenmois.readish.home.model.Book(
+                    Book(
                         id = CursorManager.getInt(cursor, RecentTable.Column.id),
                         title = CursorManager.getString(cursor, RecentTable.Column.title),
                         author = CursorManager.getString(cursor, RecentTable.Column.author),
@@ -69,24 +72,25 @@ class BookRepository @Inject constructor(
     ) {
         val files = File(context.getString(R.string.books_dir)).listFiles()
 
-        return@withContext files
+        val bookList = files
             ?.filter { it.name.endsWith("fb2") || it.name.endsWith("epub") }
             ?.sortedByDescending { it.lastModified() }
             ?.take(limit)
             ?.mapNotNull { parseFile(it) }
             ?.toList() ?: listOf()
+
+
+        return@withContext bookList
     }
 
-    private val parsed = WeakHashMap<String, EBookFile?>()
     private fun parseFile(file: File): EBookFile? {
-        if (parsed.containsKey(file.path)) {
-            return parsed[file.path]
+        var book = cache[file]
+
+        if (book == null) {
+            book = EBookParser.parseBook(file)
+            cache.set(book)
         }
 
-        val data = EBookParser.parseBook(file)
-
-        parsed[file.path] = data
-
-        return data
+        return book
     }
 }
