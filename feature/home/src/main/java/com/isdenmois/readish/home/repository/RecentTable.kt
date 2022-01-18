@@ -3,7 +3,7 @@ package com.isdenmois.readish.home.repository
 import android.net.Uri
 
 object RecentTable {
-    val URI = Uri.parse("content://com.neverland.alreaderprofs.BooksProvider/recent")
+    val URI: Uri = Uri.parse("content://com.neverland.alreaderprofs.BooksProvider/recent")
 
     object Column {
         const val id = "id"
