@@ -19,7 +19,7 @@ platform :android do
 
   desc 'Print apk size'
   lane :print_apk_size do
-    puts("Apk size: #{File.size(lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]) / 1048576}Mb")
+    puts("Apk size: #{File.size(lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]) / 1024}Kb")
   end
 
   desc 'Build '
