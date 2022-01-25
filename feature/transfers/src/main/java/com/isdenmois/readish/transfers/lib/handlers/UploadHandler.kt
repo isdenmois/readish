@@ -1,5 +1,7 @@
 package com.isdenmois.readish.transfers.lib.handlers
 
+import android.os.Handler
+import android.os.Looper
 import com.isdenmois.readish.transfers.lib.FileUploadedListener
 import com.isdenmois.readish.transfers.lib.FixedResponse
 import fi.iki.elonen.NanoHTTPD
@@ -32,7 +34,10 @@ class UploadHandler : RouterNanoHTTPD.DefaultHandler() {
 
                 tmp.inputStream().copyTo(output.outputStream())
                 tmp.delete()
-                fileUploadedListener?.onFileUploaded(output)
+
+                Handler(Looper.getMainLooper()).post {
+                    fileUploadedListener?.onFileUploaded(output)
+                }
             }
 
             FixedResponse.success()
