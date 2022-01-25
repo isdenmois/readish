@@ -9,6 +9,7 @@ import android.graphics.Color.BLACK
 import android.graphics.Color.WHITE
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
@@ -17,16 +18,18 @@ import androidx.lifecycle.ViewModel
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
-import com.isdenmois.readish.transfers.HTTPD
+import com.isdenmois.readish.transfers.lib.FileUploadedListener
+import com.isdenmois.readish.transfers.lib.HTTPD
 import com.isdenmois.readish.transfers.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class TransfersViewModel @Inject constructor(
     @ApplicationContext private val applicationContext: Context,
-) : ViewModel() {
+) : ViewModel(), FileUploadedListener {
     val addressState = mutableStateOf("")
     val qrState = mutableStateOf<ImageBitmap?>(null)
 
@@ -44,7 +47,7 @@ class TransfersViewModel @Inject constructor(
     }
 
     private val server by lazy {
-        HTTPD(uploadsDir)
+        HTTPD(root = uploadsDir, fileUploadedListener = this)
     }
 
     init {
@@ -135,5 +138,9 @@ class TransfersViewModel @Inject constructor(
         if (wifiManager.isWifiEnabled) {
             wifiManager.isWifiEnabled = false
         }
+    }
+
+    override fun onFileUploaded(file: File) {
+        Toast.makeText(applicationContext, "File `${file.name}` uploaded", Toast.LENGTH_SHORT).show()
     }
 }
