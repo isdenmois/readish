@@ -26,7 +26,7 @@ class EBookCache @Inject constructor(private val cacheManager: CacheManager) {
         book?.let {
             val key = book.file.name
 
-            memoryCache[key]
+            memoryCache[key] = book
             cacheManager.set(key, book.toCache())
         }
     }
