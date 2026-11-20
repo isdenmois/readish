@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the debug APK
+    cmds:
+      - ./gradlew :app:assembleDebug
+
+  lint:
+    desc: Run ktlint and Android lint
+    cmds:
+      - ./gradlew ktlintCheck lint
+
+  test:
+    desc: Run unit tests (the project currently has no test sources)
+    cmds:
+      - ./gradlew test
