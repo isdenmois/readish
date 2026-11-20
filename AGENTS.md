@@ -51,7 +51,7 @@ Readish is an Android home-screen app for Onyx Boox e-readers. It shows reading 
 - "My Books" comes from the stock reader's content provider (`content://com.neverland.alreaderprofs.BooksProvider/recent`, see `RecentTable`). There is no local book database, so a normal emulator shows an empty list.
 - `books_dir` is variant-specific: debug `/storage/emulated/0/Download`, release `/storage/emulated/0/WifiTransfer`. Wi-Fi uploads and the latest-added list use this path.
 - The upload server listens on port 8083. It starts when the transfers destination opens and stops when that destination is popped; uploads do not survive leaving the screen.
-- On opening transfers, the app attempts `setWifiEnabled(true)`. Android 10+ ignores that call unless the OEM allows it, so the screen also offers a button to the system Wi-Fi panel when no address appears.
+- On opening transfers, the app attempts `setWifiEnabled(true)` and shows "WiFi is turning on" while it waits. If Wi-Fi was off and Readish turned it on, it turns Wi-Fi back off in `onCleared`. Android 10+ ignores the call unless the OEM allows it, so after 5 seconds the screen falls back to a button for the system Wi-Fi panel.
 - `EBookParser.cacheDirectory` must be set before parsing books (done in `HomeViewModel.init`).
 - The app declares `CATEGORY_HOME`, so installing it may replace the device's home screen. It relies on `MANAGE_EXTERNAL_STORAGE`; `requestLegacyExternalStorage` was removed because targetSdk 30+ ignores it.
 - Opening a book/file is done with raw `file://` URIs after `ReadishApplication` disables `StrictMode` file-URI death. The stock reader needs real paths, so don't migrate this to SAF without device testing.

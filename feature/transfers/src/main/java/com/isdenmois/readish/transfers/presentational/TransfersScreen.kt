@@ -62,14 +62,22 @@ fun TransfersContent(state: TransfersUiState, onBack: () -> Unit, onOpenWifiSett
             Text(state.address, style = MaterialTheme.typography.headlineMedium)
 
             if (state.address.isBlank()) {
-                Text(
-                    text = stringResource(R.string.wifi_off),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                if (state.wifiTurningOn) {
+                    Text(
+                        text = stringResource(R.string.wifi_turning_on),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.wifi_off),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
 
-                TextButton(onClick = onOpenWifiSettings) {
-                    Text(stringResource(R.string.open_wifi_settings))
+                    TextButton(onClick = onOpenWifiSettings) {
+                        Text(stringResource(R.string.open_wifi_settings))
+                    }
                 }
             }
         }
