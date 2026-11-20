@@ -21,5 +21,6 @@ rootProject.name = "Readish"
 include(":app")
 include(":shared")
 include(":feature:home")
+include(":feature:apps")
 include(":feature:transfers")
 include(":feature:library")

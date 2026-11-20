@@ -91,6 +91,7 @@ dependencies {
 
     implementation(project(":shared"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:apps"))
     implementation(project(":feature:transfers"))
     implementation(project(":feature:library"))
 
