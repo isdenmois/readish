@@ -11,7 +11,7 @@ javax-annotation = "1.3.2"
 kotlinx-coroutines = "1.11.0"
 ebookparser = "0.7.2"
 zxing = "3.5.0"
-nanohttpd = "2.3.1"
+ktor = "3.3.3"
 junit = "4.13.2"
 robolectric = "4.18.1"
 mockk = "1.14.12"
@@ -33,8 +33,8 @@ javax-annotation-api = { module = "javax.annotation:javax.annotation-api", versi
 
 ebookparser = { module = "com.github.isdenmois:EBookParser", version.ref = "ebookparser" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
-nanohttpd-project = { module = "org.nanohttpd:nanohttpd-project", version.ref = "nanohttpd" }
-nanohttpd-nanolets = { module = "org.nanohttpd:nanohttpd-nanolets", version.ref = "nanohttpd" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }

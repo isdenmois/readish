@@ -18,8 +18,7 @@ import androidx.lifecycle.ViewModel
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
-import com.isdenmois.readish.transfers.lib.FileUploadedListener
-import com.isdenmois.readish.transfers.lib.HTTPD
+import com.isdenmois.readish.transfers.lib.UploadServer
 import com.isdenmois.readish.transfers.lib.formatIpAddress
 import com.isdenmois.readish.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,13 +30,12 @@ import javax.inject.Inject
 class TransfersViewModel
 @Inject
 constructor(@ApplicationContext private val applicationContext: Context) :
-    ViewModel(),
-    FileUploadedListener {
+    ViewModel() {
     val addressState = mutableStateOf("")
     val qrState = mutableStateOf<ImageBitmap?>(null)
 
     private val size = 512
-    private val port = 8083
+    private val port = UploadServer.PORT
 
     private val uploadsDir by lazy {
         applicationContext.getString(R.string.books_dir)
@@ -51,7 +49,7 @@ constructor(@ApplicationContext private val applicationContext: Context) :
         }
 
     private val server by lazy {
-        HTTPD(root = uploadsDir, fileUploadedListener = this)
+        UploadServer(uploadsDir = File(uploadsDir), onFileUploaded = ::onFileUploaded)
     }
 
     init {
@@ -139,7 +137,7 @@ constructor(@ApplicationContext private val applicationContext: Context) :
         }
     }
 
-    override fun onFileUploaded(file: File) {
+    private fun onFileUploaded(file: File) {
         Toast.makeText(applicationContext, "File `${file.name}` uploaded", Toast.LENGTH_SHORT).show()
     }
 }

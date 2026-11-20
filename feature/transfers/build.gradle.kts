@@ -53,8 +53,8 @@ dependencies {
     implementation(libs.javax.annotation.api)
 
     implementation(libs.zxing.core)
-    implementation(libs.nanohttpd.project)
-    implementation(libs.nanohttpd.nanolets)
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.cio)
 
     implementation(project(":shared"))
 
