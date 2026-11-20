@@ -10,6 +10,8 @@ import android.graphics.Color.BLACK
 import android.graphics.Color.WHITE
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
+import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -59,8 +61,6 @@ constructor(@ApplicationContext private val applicationContext: Context) :
     init {
         server.start()
 
-        enableWifi()
-
         val filter =
             IntentFilter().apply {
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
@@ -74,7 +74,17 @@ constructor(@ApplicationContext private val applicationContext: Context) :
         super.onCleared()
         server.stop()
         applicationContext.unregisterReceiver(receiver)
-        disableWifi()
+    }
+
+    fun openWifiSettings() {
+        val intent =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Intent(Settings.Panel.ACTION_WIFI)
+            } else {
+                Intent(Settings.ACTION_WIFI_SETTINGS)
+            }.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        applicationContext.startActivity(intent)
     }
 
     private fun checkLocalAddress() {
@@ -124,22 +134,6 @@ constructor(@ApplicationContext private val applicationContext: Context) :
         val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         bitmap.setPixels(pixels, 0, w, 0, 0, w, h)
         return bitmap
-    }
-
-    private fun enableWifi() {
-        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-
-        if (!wifiManager.isWifiEnabled) {
-            wifiManager.isWifiEnabled = true
-        }
-    }
-
-    private fun disableWifi() {
-        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-
-        if (wifiManager.isWifiEnabled) {
-            wifiManager.isWifiEnabled = false
-        }
     }
 
     private fun onFileUploaded(file: File) {

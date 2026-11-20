@@ -25,11 +25,15 @@ import com.isdenmois.readish.transfers.R
 fun TransfersScreen(onBack: () -> Unit, vm: TransfersViewModel = hiltViewModel()) {
     val state by vm.uiState.collectAsStateWithLifecycle()
 
-    TransfersContent(state = state, onBack = onBack)
+    TransfersContent(
+        state = state,
+        onBack = onBack,
+        onOpenWifiSettings = vm::openWifiSettings,
+    )
 }
 
 @Composable
-fun TransfersContent(state: TransfersUiState, onBack: () -> Unit) {
+fun TransfersContent(state: TransfersUiState, onBack: () -> Unit, onOpenWifiSettings: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,10 +63,14 @@ fun TransfersContent(state: TransfersUiState, onBack: () -> Unit) {
 
             if (state.address.isBlank()) {
                 Text(
-                    text = stringResource(R.string.wifi_turning_on),
+                    text = stringResource(R.string.wifi_off),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+
+                TextButton(onClick = onOpenWifiSettings) {
+                    Text(stringResource(R.string.open_wifi_settings))
+                }
             }
         }
     }

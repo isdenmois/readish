@@ -78,6 +78,7 @@ class ScreenshotTest {
                 TransfersContent(
                     state = TransfersUiState(address = "http://192.168.1.42:8083"),
                     onBack = {},
+                    onOpenWifiSettings = {},
                 )
             }
         }
