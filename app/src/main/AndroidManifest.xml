@@ -13,6 +13,11 @@
         <provider android:authorities="com.neverland.alreaderprofs.BooksProvider" />
 
         <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+
+        <intent>
             <action android:name="android.intent.action.VIEW" />
         </intent>
     </queries>

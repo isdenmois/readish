@@ -34,6 +34,7 @@ import com.isdenmois.readish.home.presentational.ui.LoadStateContent
 import com.isdenmois.readish.ui.Icon
 import com.isdenmois.readish.ui.noRippleClickable
 import java.io.File
+import com.isdenmois.readish.ui.R as SharedR
 
 @Composable
 fun HomeScreen(onOpenTransfers: () -> Unit, onOpenLibrary: () -> Unit, vm: HomeViewModel = hiltViewModel()) {
@@ -84,7 +85,7 @@ fun HomeContent(
 
             Icon(
                 title = stringResource(R.string.applications),
-                icon = R.drawable.ic_apps,
+                icon = SharedR.drawable.ic_apps,
                 isLast = true,
                 onClick = onOpenOnyxHome,
             )

@@ -2,6 +2,7 @@ package com.isdenmois.readish
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.isdenmois.readish.ui.AppLauncher
 import com.isdenmois.readish.ui.ReaderLauncher
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,10 @@ class MainModule {
     @Singleton
     @Provides
     fun provideReaderLauncher(@ApplicationContext context: Context) = ReaderLauncher(context)
+
+    @Singleton
+    @Provides
+    fun provideAppLauncher(@ApplicationContext context: Context) = AppLauncher(context)
 
     @Singleton
     @Provides
