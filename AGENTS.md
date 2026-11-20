@@ -8,7 +8,9 @@ Readish is an Android home-screen app for Onyx Boox e-readers. It shows reading 
 - `task build` produces the signed release APK at `app/build/outputs/apk/release/app-release.apk` (compileSdk 31, minSdk 28) and prints its size.
 - Debug builds are plain Gradle: `./gradlew :app:assembleDebug` → `app/build/outputs/apk/debug/app-debug.apk`.
 - `Taskfile.yml` wraps the common jobs: `task build`, `task lint` (ktlint + Android lint), `task test`, `task version:show`, `task clean:apk`. Use the Gradle commands directly if Go Task isn't installed.
-- There are no tests and no CI. Do not claim a test suite; verify with `assembleDebug`.
+- There is no CI. Verify changes with `./gradlew test assembleDebug`.
+- Unit tests live in `feature/home/src/test/java` and `feature/transfers/src/test/java` (JUnit 4 + Robolectric 4.9 + MockK + `kotlinx-coroutines-test`). `./gradlew test` (or `task test`) runs them; they are JVM-only, no emulator needed.
+- Tests cover the logic, not the Compose UI: mime mapping, `Book` progress math, cursor mapping, caches, the stock-reader repository, the upload server handlers and the Wi-Fi IP formatter. Robolectric's `MimeTypeMap` has no built-in table, so mime tests must register mappings through the shadow.
 - ktlint runs on every subproject with `ignoreFailures = true`, so style never fails the build. Format with `./gradlew ktlintFormat`. Rules: 4-space indent, 120 columns (`.editorconfig`).
 - ktlint's filter includes only `**/kotlin/**`, while all sources live under `src/main/java`; expect ktlint to skip most files.
 - `ktlintCheck` and `lint` resolve extra artifacts on first use; TLS/resolution errors there are environmental, not code failures.

@@ -64,7 +64,7 @@ tasks:
       - ./gradlew ktlintCheck lint
 
   test:
-    desc: Run unit tests (the project currently has no test sources)
+    desc: Run JVM unit tests (feature:home, feature:transfers)
     cmds:
       - ./gradlew test
 
