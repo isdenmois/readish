@@ -9,6 +9,9 @@ import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.home.model.Book
 import com.isdenmois.readish.home.presentational.HomeContent
 import com.isdenmois.readish.home.presentational.HomeUiState
+import com.isdenmois.readish.library.model.LibraryBook
+import com.isdenmois.readish.library.presentational.LibraryContent
+import com.isdenmois.readish.library.presentational.LibraryUiState
 import com.isdenmois.readish.transfers.presentational.TransfersContent
 import com.isdenmois.readish.transfers.presentational.TransfersUiState
 import com.isdenmois.readish.ui.LoadState
@@ -36,6 +39,7 @@ class ScreenshotTest {
                     HomeContent(
                         state = populatedState(),
                         onOpenTransfers = {},
+                        onOpenLibrary = {},
                         onOpenCurrentBook = {},
                         onOpenBook = {},
                         onShowBrightness = {},
@@ -59,6 +63,7 @@ class ScreenshotTest {
                             latest = LoadState.Success(emptyList()),
                         ),
                         onOpenTransfers = {},
+                        onOpenLibrary = {},
                         onOpenCurrentBook = {},
                         onOpenBook = {},
                         onShowBrightness = {},
@@ -69,6 +74,51 @@ class ScreenshotTest {
         }
 
         composeRule.onRoot().captureRoboImage("src/test/screenshots/home_empty.png")
+    }
+
+    @Test
+    fun library_populated() {
+        composeRule.setContent {
+            ReadishTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    LibraryContent(
+                        state = LibraryUiState(books = LoadState.Success(libraryBooks())),
+                        onBack = {},
+                        onOpenBook = {},
+                        onSort = {},
+                        onFilter = {},
+                        onPreviousPage = {},
+                        onNextPage = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/library_populated.png")
+    }
+
+    @Test
+    fun library_no_matches() {
+        composeRule.setContent {
+            ReadishTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    LibraryContent(
+                        state = LibraryUiState(
+                            books = LoadState.Success(libraryBooks()),
+                            filter = "zzz",
+                        ),
+                        onBack = {},
+                        onOpenBook = {},
+                        onSort = {},
+                        onFilter = {},
+                        onPreviousPage = {},
+                        onNextPage = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/library_no_matches.png")
     }
 
     @Test
@@ -84,6 +134,30 @@ class ScreenshotTest {
         }
 
         composeRule.onRoot().captureRoboImage("src/test/screenshots/transfers.png")
+    }
+
+    private fun libraryBooks() = listOf(
+        Triple("Dune", "Frank Herbert", "dune.fb2"),
+        Triple("Neuromancer", "William Gibson", "neuromancer.epub"),
+        Triple("Solaris", "Stanisław Lem", "solaris.fb2"),
+        Triple("The Left Hand of Darkness", "Ursula K. Le Guin", "left-hand.epub"),
+        Triple("Piranesi", "Susanna Clarke", "piranesi.epub"),
+        Triple("Roadside Picnic", "Arkady Strugatsky", "picnic.fb2"),
+        Triple("Blindsight", "Peter Watts", "blindsight.epub"),
+        Triple("Hyperion", "Dan Simmons", "hyperion.fb2"),
+        Triple("Exhalation", "Ted Chiang", "exhalation.epub"),
+        Triple("Anathem", "Neal Stephenson", "anathem.fb2"),
+        Triple("Children of Time", "Adrian Tchaikovsky", "children-of-time.epub"),
+        Triple("The Dispossessed", "Ursula K. Le Guin", "dispossessed.fb2"),
+        Triple("A Wizard of Earthsea", "Ursula K. Le Guin", "earthsea.epub"),
+    ).mapIndexed { index, (title, author, fileName) ->
+        LibraryBook(
+            file = File(fileName),
+            title = title,
+            author = author,
+            cover = null,
+            modifiedAt = (13 - index).toLong(),
+        )
     }
 
     private fun populatedState() = HomeUiState(

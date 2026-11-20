@@ -36,7 +36,7 @@ import com.isdenmois.readish.ui.noRippleClickable
 import java.io.File
 
 @Composable
-fun HomeScreen(onOpenTransfers: () -> Unit, vm: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(onOpenTransfers: () -> Unit, onOpenLibrary: () -> Unit, vm: HomeViewModel = hiltViewModel()) {
     val state by vm.uiState.collectAsStateWithLifecycle()
 
     LifecycleResumeEffect(Unit) {
@@ -48,6 +48,7 @@ fun HomeScreen(onOpenTransfers: () -> Unit, vm: HomeViewModel = hiltViewModel())
     HomeContent(
         state = state,
         onOpenTransfers = onOpenTransfers,
+        onOpenLibrary = onOpenLibrary,
         onOpenCurrentBook = vm::openAlReader,
         onOpenBook = vm::openBook,
         onShowBrightness = vm::showSystemBrightnessDialog,
@@ -59,6 +60,7 @@ fun HomeScreen(onOpenTransfers: () -> Unit, vm: HomeViewModel = hiltViewModel())
 fun HomeContent(
     state: HomeUiState,
     onOpenTransfers: () -> Unit,
+    onOpenLibrary: () -> Unit,
     onOpenCurrentBook: () -> Unit,
     onOpenBook: (File) -> Unit,
     onShowBrightness: () -> Unit,
@@ -69,6 +71,7 @@ fun HomeContent(
             Text(
                 text = stringResource(R.string.my_books),
                 style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.noRippleClickable { onOpenTransfers() },
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -103,7 +106,7 @@ fun HomeContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Row(modifier = Modifier.noRippleClickable { onOpenTransfers() }) {
+        Row(modifier = Modifier.noRippleClickable { onOpenLibrary() }) {
             Text(
                 text = stringResource(R.string.latest_added),
                 style = MaterialTheme.typography.displaySmall,
