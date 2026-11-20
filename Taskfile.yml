@@ -1,10 +1,62 @@
 version: '3'
 
+dotenv: ['.env']
+
+vars:
+  APK: app/build/outputs/apk/release/app-release.apk
+
 tasks:
-  build:
-    desc: Build the debug APK
+  default:
+    desc: List tasks
+    silent: true
     cmds:
-      - ./gradlew :app:assembleDebug
+      - task --list
+
+  build:
+    desc: Build the signed release APK (needs KEY_STORE_FILE, KEY_ALIAS, KEY_PASSWORD)
+    requires:
+      vars: [KEY_STORE_FILE, KEY_ALIAS, KEY_PASSWORD]
+    cmds:
+      - cmd: |
+          test -f "{{.KEY_STORE_FILE}}" || { echo "error: keystore {{.KEY_STORE_FILE}} not found"; exit 1; }
+          ./gradlew :app:assembleRelease \
+            -Pandroid.injected.signing.store.file={{.KEY_STORE_FILE}} \
+            -Pandroid.injected.signing.store.password={{.KEY_PASSWORD}} \
+            -Pandroid.injected.signing.key.alias={{.KEY_ALIAS}} \
+            -Pandroid.injected.signing.key.password={{.KEY_PASSWORD}}
+        silent: true
+      - cmd: |
+          size=$(stat -c%s "{{.APK}}")
+          echo "APK: {{.APK}} ($((size / 1024))Kb)"
+
+  upload:
+    desc: Upload the release APK to SERVER_URL (APK=path overrides the file)
+    requires:
+      vars: [SERVER_URL]
+    cmds:
+      - cmd: |
+          set -e
+          test -f "{{.APK}}" || { echo "error: {{.APK}} not found - run 'task build' first"; exit 1; }
+          curl --fail-with-body -sS -F "file=@{{.APK}}" "{{.SERVER_URL}}" || { rc=$?; echo; echo "error: upload failed (curl exit $rc)" >&2; exit $rc; }
+          echo
+
+  version:bump:
+    desc: Increment versionCode and versionName in app/build.gradle
+    cmds:
+      - ./scripts/bump-version.sh
+
+  version:show:
+    desc: Print versionCode and versionName
+    cmds:
+      - grep -E '^[[:space:]]*version(Name|Code)[[:space:]]' app/build.gradle
+
+  clean:apk:
+    desc: Delete every APK in the repository
+    silent: true
+    cmds:
+      - cmd: |
+          count=$(find . -name '*.apk' -not -path './.git/*' -print -delete | wc -l)
+          echo "Deleted $count APK(s)"
 
   lint:
     desc: Run ktlint and Android lint
@@ -15,3 +67,8 @@ tasks:
     desc: Run unit tests (the project currently has no test sources)
     cmds:
       - ./gradlew test
+
+  deploy:
+    desc: Bump version, build signed APK, commit the bump, upload to SERVER_URL
+    cmds:
+      - ./scripts/deploy.sh
