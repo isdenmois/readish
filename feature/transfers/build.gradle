@@ -29,6 +29,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -51,4 +55,9 @@ dependencies {
     implementation "org.nanohttpd:nanohttpd-nanolets:_"
 
     implementation(project(':shared'))
+
+    testImplementation 'junit:junit:_'
+    testImplementation 'org.robolectric:robolectric:_'
+    testImplementation 'io.mockk:mockk:_'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:_'
 }
