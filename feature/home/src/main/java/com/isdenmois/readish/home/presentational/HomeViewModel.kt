@@ -1,17 +1,13 @@
 package com.isdenmois.readish.home.presentational
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isdenmois.ebookparser.EBookParser
-import com.isdenmois.readish.home.R
-import com.isdenmois.readish.home.model.MimeUtils
 import com.isdenmois.readish.home.repository.BookRepository
 import com.isdenmois.readish.ui.LoadState
+import com.isdenmois.readish.ui.ReaderLauncher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
@@ -29,6 +25,7 @@ class HomeViewModel
 constructor(
     @ApplicationContext private val applicationContext: Context,
     private val repository: BookRepository,
+    private val readerLauncher: ReaderLauncher,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -54,52 +51,15 @@ constructor(
     }
 
     fun openAlReader() {
-        val packageManager = applicationContext.packageManager
-        val intent = packageManager.getLaunchIntentForPackage("com.neverland.alreaderprofs")
-
-        applicationContext.startActivity(intent)
+        readerLauncher.openReader()
     }
 
     fun openBook(file: File) {
-        val packageManager = applicationContext.packageManager
-        val uri = Uri.fromFile(file)
-        val type = MimeUtils.getByFileName(file.name)
-
-        val intent =
-            packageManager.getLaunchIntentForPackage("com.neverland.alreaderprofs")?.apply {
-                setDataAndType(uri, type)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-        try {
-            applicationContext.startActivity(intent)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(
-                applicationContext,
-                applicationContext.getString(R.string.cant_start_application),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+        readerLauncher.openBook(file)
     }
 
     fun openOnyxHome() {
-        val intent =
-            Intent().apply {
-                component = ComponentName("com.onyx", "com.onyx.reader.main.ui.MainActivity")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-
-        try {
-            applicationContext.startActivity(intent)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(
-                applicationContext,
-                applicationContext.getString(R.string.cant_start_application),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+        readerLauncher.openOnyxHome()
     }
 
     fun showSystemBrightnessDialog() {

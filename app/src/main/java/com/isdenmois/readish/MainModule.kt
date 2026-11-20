@@ -2,6 +2,7 @@ package com.isdenmois.readish
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.isdenmois.readish.ui.ReaderLauncher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class MainModule {
+    @Singleton
+    @Provides
+    fun provideReaderLauncher(@ApplicationContext context: Context) = ReaderLauncher(context)
+
     @Singleton
     @Provides
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {

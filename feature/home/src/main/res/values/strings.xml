@@ -5,5 +5,4 @@
     <string name="brightness">Brightness</string>
     <string name="applications">Applications</string>
     <string name="no_books">No books yet</string>
-    <string name="cant_start_application">Can\'t start application</string>
 </resources>

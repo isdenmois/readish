@@ -5,6 +5,7 @@ import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.home.model.Book
 import com.isdenmois.readish.home.repository.BookRepository
 import com.isdenmois.readish.ui.LoadState
+import com.isdenmois.readish.ui.ReaderLauncher
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -25,12 +26,14 @@ import java.io.File
 class HomeViewModelTest {
     private lateinit var context: Context
     private lateinit var repository: BookRepository
+    private lateinit var readerLauncher: ReaderLauncher
 
     @Before
     fun setUp() {
         context = mockk(relaxed = true)
         every { context.cacheDir } returns File("/tmp/readish-cache")
         repository = mockk()
+        readerLauncher = mockk(relaxed = true)
     }
 
     @After
@@ -43,7 +46,7 @@ class HomeViewModelTest {
         // Arrange
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         stubRepository(books = emptyList(), files = emptyList())
-        val viewModel = HomeViewModel(context, repository)
+        val viewModel = HomeViewModel(context, repository, readerLauncher)
 
         // Act
         viewModel.loadBooks()
@@ -60,7 +63,7 @@ class HomeViewModelTest {
         val book = bookOf("Dune")
         val file = EBookFile(title = "Neuromancer", author = "Gibson", file = File("neuromancer.fb2"), cover = null)
         stubRepository(books = listOf(book), files = listOf(file))
-        val viewModel = HomeViewModel(context, repository)
+        val viewModel = HomeViewModel(context, repository, readerLauncher)
 
         // Act
         viewModel.loadBooks()
@@ -77,7 +80,7 @@ class HomeViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         coEvery { repository.getCurrentBooks(4) } throws IllegalStateException("provider unavailable")
         coEvery { repository.getLatestAddedBooks(6) } returns emptyList()
-        val viewModel = HomeViewModel(context, repository)
+        val viewModel = HomeViewModel(context, repository, readerLauncher)
 
         // Act
         viewModel.loadBooks()

@@ -1,4 +1,4 @@
-package com.isdenmois.readish.home.model
+package com.isdenmois.readish.ui
 
 import android.webkit.MimeTypeMap
 
