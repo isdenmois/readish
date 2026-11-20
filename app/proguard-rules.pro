@@ -23,3 +23,6 @@
 -dontwarn kotlin.reflect.**
 -dontwarn kotlin.internal.jdk7.**
 -dontwarn org.slf4j.**
+# Ktor's debug detector uses JVM-only management APIs.
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean

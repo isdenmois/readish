@@ -51,8 +51,6 @@ dependencies {
         exclude(module = "dagger-lint-aar")
     }
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.javax.annotation.api)
 
     implementation(libs.ebookparser)
 

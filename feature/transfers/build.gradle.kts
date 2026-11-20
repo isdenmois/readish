@@ -51,12 +51,14 @@ dependencies {
         exclude(module = "dagger-lint-aar")
     }
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.javax.annotation.api)
 
     implementation(libs.zxing.core)
-    implementation(libs.ktor.server.core)
-    implementation(libs.ktor.server.cio)
+    implementation(libs.ktor.server.core) {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
+    }
+    implementation(libs.ktor.server.cio) {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
+    }
 
     implementation(project(":shared"))
 

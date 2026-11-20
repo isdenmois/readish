@@ -84,8 +84,6 @@ dependencies {
         exclude(module = "dagger-lint-aar")
     }
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.javax.annotation.api)
 
     debugImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -102,11 +100,4 @@ dependencies {
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.roborazzi)
     testImplementation(libs.roborazzi.compose)
-}
-
-configurations.named("implementation") {
-    exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
-    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk7")
-    exclude(group = "androidx.lifecycle", module = "lifecycle-livedata-core")
-    exclude(group = "androidx.lifecycle", module = "lifecycle-livedata")
 }
