@@ -1,4 +1,4 @@
-package com.isdenmois.readish.home.lib
+package com.isdenmois.readish.library.lib
 
 import com.isdenmois.ebookparser.BitmapDecoder
 import com.isdenmois.ebookparser.EBookFile

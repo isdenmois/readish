@@ -3,13 +3,14 @@ package com.isdenmois.readish.home.repository
 import android.content.Context
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.ebookparser.EBookParser
-import com.isdenmois.readish.home.lib.EBookCache
 import com.isdenmois.readish.home.lib.forEach
 import com.isdenmois.readish.home.lib.getFile
 import com.isdenmois.readish.home.lib.getInt
 import com.isdenmois.readish.home.lib.getString
 import com.isdenmois.readish.home.model.Book
-import com.isdenmois.readish.ui.R
+import com.isdenmois.readish.library.lib.EBookCache
+import com.isdenmois.readish.library.model.toEBookFile
+import com.isdenmois.readish.library.repository.LibraryRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,6 +22,7 @@ class BookRepository
 constructor(
     @ApplicationContext private val context: Context,
     private val cache: EBookCache,
+    private val libraryRepository: LibraryRepository,
 ) {
     suspend fun getCurrentBooks(limit: Int = 4): List<Book> = withContext(
         Dispatchers.Default,
@@ -59,18 +61,8 @@ constructor(
         return@withContext result
     }
 
-    suspend fun getLatestAddedBooks(limit: Int = 6): List<EBookFile> = withContext(
-        Dispatchers.Default,
-    ) {
-        val files = File(context.getString(R.string.books_dir)).listFiles() ?: return@withContext emptyList()
-
-        return@withContext files
-            .filter { it.name.endsWith("fb2") || it.name.endsWith("epub") }
-            .sortedByDescending { it.lastModified() }
-            .take(limit)
-            .mapNotNull { parseFile(it) }
-            .toList()
-    }
+    suspend fun getLatestAddedBooks(limit: Int = 6): List<EBookFile> =
+        libraryRepository.getLatest(limit).map { it.toEBookFile() }
 
     private fun parseFile(file: File): EBookFile? {
         var book = cache[file]

@@ -7,9 +7,10 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
 import com.isdenmois.ebookparser.EBookParser
-import com.isdenmois.readish.home.lib.CacheManager
-import com.isdenmois.readish.home.lib.EBookCache
 import com.isdenmois.readish.home.model.Book
+import com.isdenmois.readish.library.lib.CacheManager
+import com.isdenmois.readish.library.lib.EBookCache
+import com.isdenmois.readish.library.repository.LibraryRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -38,7 +39,8 @@ class BookRepositoryTest {
         context = RuntimeEnvironment.getApplication()
         EBookParser.cacheDirectory = context.cacheDir
         val preferences = context.getSharedPreferences("test", Context.MODE_PRIVATE)
-        repository = BookRepository(context, EBookCache(CacheManager(preferences)))
+        val cache = EBookCache(CacheManager(preferences))
+        repository = BookRepository(context, cache, LibraryRepository(tempFolder.root, cache))
     }
 
     @Test

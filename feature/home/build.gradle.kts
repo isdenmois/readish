@@ -56,6 +56,7 @@ dependencies {
 
     implementation(project(":shared"))
     implementation(project(":feature:transfers"))
+    implementation(project(":feature:library"))
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

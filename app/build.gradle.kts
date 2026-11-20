@@ -92,6 +92,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":feature:home"))
     implementation(project(":feature:transfers"))
+    implementation(project(":feature:library"))
 
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit)

@@ -1,4 +1,4 @@
-package com.isdenmois.readish.home.lib
+package com.isdenmois.readish.library.lib
 
 import android.content.Context
 import android.content.SharedPreferences
