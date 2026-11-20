@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Increment versionCode by one and bump the last numeric segment of versionName.
 # Suffixes after that number are dropped: "1.2.0-beta" becomes "1.2.1".
-# Usage: bump-version.sh [gradle-file]  (default: app/build.gradle)
+# Usage: bump-version.sh [gradle-file]  (default: app/build.gradle.kts)
 set -euo pipefail
 
-file="${1:-app/build.gradle}"
+file="${1:-app/build.gradle.kts}"
 
 if [[ ! -f $file ]]; then
     echo "error: $file not found" >&2
@@ -18,8 +18,8 @@ bumped_code=0
 bumped_name=0
 log=()
 
-code_re='^([[:space:]]*versionCode[[:space:]]+)([0-9]+)(.*)$'
-name_re='^([[:space:]]*versionName[[:space:]]+")([^"]*)(".*)$'
+code_re='^([[:space:]]*versionCode[[:space:]]*=[[:space:]]*)([0-9]+)(.*)$'
+name_re='^([[:space:]]*versionName[[:space:]]*=[[:space:]]*")([^"]*)(".*)$'
 number_re='^(.*[^0-9])?([0-9]+)([^0-9]*)$'
 
 while IFS= read -r line || [[ -n $line ]]; do

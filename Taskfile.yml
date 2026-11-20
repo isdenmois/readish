@@ -41,14 +41,14 @@ tasks:
           echo
 
   version:bump:
-    desc: Increment versionCode and versionName in app/build.gradle
+    desc: Increment versionCode and versionName in app/build.gradle.kts
     cmds:
       - ./scripts/bump-version.sh
 
   version:show:
     desc: Print versionCode and versionName
     cmds:
-      - grep -E '^[[:space:]]*version(Name|Code)[[:space:]]' app/build.gradle
+      - grep -E '^[[:space:]]*version(Name|Code)[[:space:]]' app/build.gradle.kts
 
   clean:apk:
     desc: Delete every APK in the repository

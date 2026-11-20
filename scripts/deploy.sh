@@ -21,7 +21,7 @@ rollback() {
     if [[ $committed -eq 1 ]]; then
         git reset --quiet --hard HEAD~1
     else
-        git checkout --quiet -- app/build.gradle
+        git checkout --quiet -- app/build.gradle.kts
     fi
     echo "deploy failed; restored the pre-deploy tree" >&2
     return 0
@@ -29,7 +29,7 @@ rollback() {
 trap rollback EXIT
 
 task build
-git commit --quiet -m 'Version Bump' -- app/build.gradle
+git commit --quiet -m 'Version Bump' -- app/build.gradle.kts
 committed=1
 task upload
 
