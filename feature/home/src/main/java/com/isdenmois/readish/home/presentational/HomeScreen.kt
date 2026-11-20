@@ -37,7 +37,12 @@ import java.io.File
 import com.isdenmois.readish.ui.R as SharedR
 
 @Composable
-fun HomeScreen(onOpenTransfers: () -> Unit, onOpenLibrary: () -> Unit, vm: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    onOpenTransfers: () -> Unit,
+    onOpenLibrary: () -> Unit,
+    onOpenApps: () -> Unit,
+    vm: HomeViewModel = hiltViewModel(),
+) {
     val state by vm.uiState.collectAsStateWithLifecycle()
 
     LifecycleResumeEffect(Unit) {
@@ -53,7 +58,7 @@ fun HomeScreen(onOpenTransfers: () -> Unit, onOpenLibrary: () -> Unit, vm: HomeV
         onOpenCurrentBook = vm::openAlReader,
         onOpenBook = vm::openBook,
         onShowBrightness = vm::showSystemBrightnessDialog,
-        onOpenOnyxHome = vm::openOnyxHome,
+        onOpenApps = onOpenApps,
     )
 }
 
@@ -65,7 +70,7 @@ fun HomeContent(
     onOpenCurrentBook: () -> Unit,
     onOpenBook: (File) -> Unit,
     onShowBrightness: () -> Unit,
-    onOpenOnyxHome: () -> Unit,
+    onOpenApps: () -> Unit,
 ) {
     Column(modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -87,7 +92,7 @@ fun HomeContent(
                 title = stringResource(R.string.applications),
                 icon = SharedR.drawable.ic_apps,
                 isLast = true,
-                onClick = onOpenOnyxHome,
+                onClick = onOpenApps,
             )
         }
 

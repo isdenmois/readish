@@ -58,10 +58,6 @@ constructor(
         readerLauncher.openBook(file)
     }
 
-    fun openOnyxHome() {
-        readerLauncher.openOnyxHome()
-    }
-
     fun showSystemBrightnessDialog() {
         try {
             val intent = Intent("action.show.brightness.dialog")

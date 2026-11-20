@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.isdenmois.readish.apps.presentational.AppsScreen
 import com.isdenmois.readish.home.presentational.HomeScreen
 import com.isdenmois.readish.library.presentational.LibraryScreen
 import com.isdenmois.readish.transfers.presentational.TransfersScreen
@@ -32,6 +33,9 @@ data object TransfersRoute
 
 @Serializable
 data object LibraryRoute
+
+@Serializable
+data object AppsRoute
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -68,6 +72,9 @@ class MainActivity : ComponentActivity() {
                                 onOpenLibrary = {
                                     navController.navigate(LibraryRoute) { launchSingleTop = true }
                                 },
+                                onOpenApps = {
+                                    navController.navigate(AppsRoute) { launchSingleTop = true }
+                                },
                             )
                         }
                         composable<TransfersRoute> {
@@ -75,6 +82,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<LibraryRoute> {
                             LibraryScreen(onBack = { navController.popBackStack() })
+                        }
+                        composable<AppsRoute> {
+                            AppsScreen(onBack = { navController.popBackStack() })
                         }
                     }
                 }

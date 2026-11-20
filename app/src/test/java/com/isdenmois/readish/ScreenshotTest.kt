@@ -1,11 +1,17 @@
 package com.isdenmois.readish
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.isdenmois.ebookparser.EBookFile
+import com.isdenmois.readish.apps.model.AppEntry
+import com.isdenmois.readish.apps.presentational.AppsContent
+import com.isdenmois.readish.apps.presentational.AppsUiState
 import com.isdenmois.readish.home.model.Book
 import com.isdenmois.readish.home.presentational.HomeContent
 import com.isdenmois.readish.home.presentational.HomeUiState
@@ -43,7 +49,7 @@ class ScreenshotTest {
                         onOpenCurrentBook = {},
                         onOpenBook = {},
                         onShowBrightness = {},
-                        onOpenOnyxHome = {},
+                        onOpenApps = {},
                     )
                 }
             }
@@ -67,7 +73,7 @@ class ScreenshotTest {
                         onOpenCurrentBook = {},
                         onOpenBook = {},
                         onShowBrightness = {},
-                        onOpenOnyxHome = {},
+                        onOpenApps = {},
                     )
                 }
             }
@@ -136,6 +142,66 @@ class ScreenshotTest {
         composeRule.onRoot().captureRoboImage("src/test/screenshots/transfers.png")
     }
 
+    @Test
+    fun apps_populated() {
+        composeRule.setContent {
+            ReadishTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    AppsContent(
+                        state = AppsUiState(apps = LoadState.Success(apps(25))),
+                        onBack = {},
+                        onOpenOnyxHome = {},
+                        onOpenApp = {},
+                        onPreviousPage = {},
+                        onNextPage = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/apps_populated.png")
+    }
+
+    @Test
+    fun apps_empty() {
+        composeRule.setContent {
+            ReadishTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    AppsContent(
+                        state = AppsUiState(apps = LoadState.Success(emptyList())),
+                        onBack = {},
+                        onOpenOnyxHome = {},
+                        onOpenApp = {},
+                        onPreviousPage = {},
+                        onNextPage = {},
+                    )
+                }
+            }
+        }
+
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/apps_empty.png")
+    }
+
+    private fun apps(count: Int) = APP_LABELS.take(count).mapIndexed { index, label ->
+        AppEntry(
+            packageName = "com.example.${label.lowercase()}",
+            label = label,
+            icon = if (index % 4 == 3) null else appIcon(shade = 40 + index * 8),
+        )
+    }
+
+    private fun appIcon(shade: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888)
+        val paint = Paint().apply {
+            color = android.graphics.Color.rgb(shade, shade, shade)
+            isAntiAlias = true
+        }
+
+        Canvas(bitmap).drawCircle(32f, 32f, 26f, paint)
+
+        return bitmap
+    }
+
     private fun libraryBooks() = listOf(
         Triple("Dune", "Frank Herbert", "dune.fb2"),
         Triple("Neuromancer", "William Gibson", "neuromancer.epub"),
@@ -196,3 +262,31 @@ class ScreenshotTest {
         cover = null,
     )
 }
+
+private val APP_LABELS = listOf(
+    "Browser",
+    "Calculator",
+    "Calendar",
+    "Camera",
+    "Clock",
+    "Contacts",
+    "Dictionary",
+    "Email",
+    "Files",
+    "Gallery",
+    "Maps",
+    "Messages",
+    "Music",
+    "News",
+    "Notes",
+    "Photos",
+    "Podcasts",
+    "Recorder",
+    "Settings",
+    "Store",
+    "Tasks",
+    "Terminal",
+    "Video",
+    "Weather",
+    "Books",
+)
