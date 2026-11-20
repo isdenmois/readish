@@ -1,4 +1,4 @@
-package com.isdenmois.readish.home.model
+package com.isdenmois.readish.ui
 
 sealed interface LoadState<out T> {
     data object Loading : LoadState<Nothing>

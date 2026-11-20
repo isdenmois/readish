@@ -7,11 +7,11 @@ import androidx.compose.ui.test.onRoot
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.home.model.Book
-import com.isdenmois.readish.home.model.LoadState
 import com.isdenmois.readish.home.presentational.HomeContent
 import com.isdenmois.readish.home.presentational.HomeUiState
 import com.isdenmois.readish.transfers.presentational.TransfersContent
 import com.isdenmois.readish.transfers.presentational.TransfersUiState
+import com.isdenmois.readish.ui.LoadState
 import com.isdenmois.readish.ui.theme.ReadishTheme
 import org.junit.Rule
 import org.junit.Test

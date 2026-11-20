@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.isdenmois.readish.home.model.LoadState
+import com.isdenmois.readish.ui.LoadState
 
 @Composable
 fun <T> LoadStateContent(state: LoadState<T>, content: @Composable (data: T) -> Unit) {

@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isdenmois.ebookparser.EBookParser
 import com.isdenmois.readish.home.R
-import com.isdenmois.readish.home.model.LoadState
 import com.isdenmois.readish.home.model.MimeUtils
 import com.isdenmois.readish.home.repository.BookRepository
+import com.isdenmois.readish.ui.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException

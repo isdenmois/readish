@@ -3,8 +3,8 @@ package com.isdenmois.readish.home.presentational
 import android.content.Context
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.home.model.Book
-import com.isdenmois.readish.home.model.LoadState
 import com.isdenmois.readish.home.repository.BookRepository
+import com.isdenmois.readish.ui.LoadState
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
