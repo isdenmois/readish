@@ -19,7 +19,7 @@ class UploadHandler : RouterNanoHTTPD.DefaultHandler() {
     override fun post(
         uriResource: RouterNanoHTTPD.UriResource,
         urlParams: Map<String?, String?>?,
-        session: NanoHTTPD.IHTTPSession
+        session: NanoHTTPD.IHTTPSession,
     ): NanoHTTPD.Response? {
         val uploadsDir = uriResource.initParameter(String::class.java)
         val fileUploadedListener = uriResource.initParameter(1, FileUploadedListener::class.java)

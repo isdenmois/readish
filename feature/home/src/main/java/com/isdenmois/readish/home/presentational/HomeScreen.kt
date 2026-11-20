@@ -1,7 +1,15 @@
 package com.isdenmois.readish.home.presentational
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -38,14 +46,14 @@ fun HomeScreen() {
             Icon(
                 title = "Brightness",
                 icon = R.drawable.ic_lightbulb,
-                onClick = { vm.showSystemBrightnessDialog() }
+                onClick = { vm.showSystemBrightnessDialog() },
             )
 
             Icon(
                 title = "Applications",
                 icon = R.drawable.ic_apps,
                 isLast = true,
-                onClick = { vm.openOnyxHome() }
+                onClick = { vm.openOnyxHome() },
             )
         }
 
@@ -96,7 +104,7 @@ fun MyBooks(books: List<Book>, vm: HomeViewModel) {
             Box(
                 modifier = Modifier
                     .border(0.5.dp, Color.Gray)
-                    .padding(24.dp)
+                    .padding(24.dp),
             ) {
                 CurrentBook(book = current, onClick = { vm.openAlReader() })
             }
@@ -105,7 +113,7 @@ fun MyBooks(books: List<Book>, vm: HomeViewModel) {
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 32.dp)
+                .padding(start = 32.dp),
         ) {
             itemsIndexed(others) { index, book ->
                 if (index != 0) {

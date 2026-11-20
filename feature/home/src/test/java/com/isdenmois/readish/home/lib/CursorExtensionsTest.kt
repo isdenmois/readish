@@ -51,10 +51,11 @@ class CursorExtensionsTest {
     @Test
     fun forEach_visitsEveryRow() {
         // Arrange
-        val cursor = MatrixCursor(arrayOf("title")).apply {
-            addRow(arrayOf("Dune"))
-            addRow(arrayOf("Neuromancer"))
-        }
+        val cursor =
+            MatrixCursor(arrayOf("title")).apply {
+                addRow(arrayOf("Dune"))
+                addRow(arrayOf("Neuromancer"))
+            }
         val titles = mutableListOf<String>()
 
         // Act

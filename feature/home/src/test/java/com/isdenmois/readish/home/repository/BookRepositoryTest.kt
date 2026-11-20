@@ -19,8 +19,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
@@ -46,7 +46,7 @@ class BookRepositoryTest {
         // Arrange
         val bookFile = tempFolder.newFile("dune.fb2").apply { writeText(fb2("Dune", "Frank", "Herbert")) }
         providerReturning(
-            cursorOf(arrayOf(7, "Dune", "Frank Herbert", 4096, 1024, bookFile.absolutePath, 90L))
+            cursorOf(arrayOf(7, "Dune", "Frank Herbert", 4096, 1024, bookFile.absolutePath, 90L)),
         )
 
         // Act
@@ -111,8 +111,7 @@ class BookRepositoryTest {
         rows.forEach { addRow(it) }
     }
 
-    private fun fb2(title: String, firstName: String, lastName: String) =
-        """<?xml version="1.0" encoding="utf-8"?>
+    private fun fb2(title: String, firstName: String, lastName: String) = """<?xml version="1.0" encoding="utf-8"?>
         <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0">
           <description><title-info><book-title>$title</book-title>
           <author><first-name>$firstName</first-name><last-name>$lastName</last-name></author>
@@ -143,25 +142,21 @@ class BookRepositoryTest {
 
         override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?) = 0
 
-        override fun update(
-            uri: Uri,
-            values: ContentValues?,
-            selection: String?,
-            selectionArgs: Array<out String>?,
-        ) = 0
+        override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?) = 0
     }
 
     private companion object {
         const val AUTHORITY = "com.neverland.alreaderprofs.BooksProvider"
 
-        val COLUMNS = arrayOf(
-            RecentTable.Column.id,
-            RecentTable.Column.title,
-            RecentTable.Column.author,
-            RecentTable.Column.bookSize,
-            RecentTable.Column.position,
-            RecentTable.Column.path,
-            RecentTable.Column.readTime,
-        )
+        val COLUMNS =
+            arrayOf(
+                RecentTable.Column.ID,
+                RecentTable.Column.TITLE,
+                RecentTable.Column.AUTHOR,
+                RecentTable.Column.BOOK_SIZE,
+                RecentTable.Column.POSITION,
+                RecentTable.Column.PATH,
+                RecentTable.Column.READ_TIME,
+            )
     }
 }

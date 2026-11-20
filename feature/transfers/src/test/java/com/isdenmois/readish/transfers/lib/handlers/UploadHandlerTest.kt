@@ -29,15 +29,17 @@ class UploadHandlerTest {
         val uploadsDir = tempFolder.newFolder("uploads")
         val body = tempFolder.newFile("nano.tmp").apply { writeText("book body") }
         val uploaded = mutableListOf<File>()
-        val listener = object : FileUploadedListener {
-            override fun onFileUploaded(file: File) {
-                uploaded.add(file)
+        val listener =
+            object : FileUploadedListener {
+                override fun onFileUploaded(file: File) {
+                    uploaded.add(file)
+                }
             }
-        }
-        val session = FakeSession(
-            parameters = mapOf("file" to listOf("dune.fb2")),
-            body = mapOf("file" to body.absolutePath),
-        )
+        val session =
+            FakeSession(
+                parameters = mapOf("file" to listOf("dune.fb2")),
+                body = mapOf("file" to body.absolutePath),
+            )
 
         // Act
         val response = UploadHandler().post(uriResource(uploadsDir, listener), emptyMap(), session)
@@ -55,10 +57,11 @@ class UploadHandlerTest {
         // Arrange
         val uploadsDir = tempFolder.newFolder("uploads")
         val body = tempFolder.newFile("nano.tmp").apply { writeText("escape") }
-        val session = FakeSession(
-            parameters = mapOf("file" to listOf("../escape.fb2")),
-            body = mapOf("file" to body.absolutePath),
-        )
+        val session =
+            FakeSession(
+                parameters = mapOf("file" to listOf("../escape.fb2")),
+                body = mapOf("file" to body.absolutePath),
+            )
 
         // Act
         val response = UploadHandler().post(uriResource(uploadsDir), emptyMap(), session)
@@ -73,11 +76,12 @@ class UploadHandlerTest {
     fun post_returnsBadRequestWhenBodyCannotBeParsed() {
         // Arrange
         val uploadsDir = tempFolder.newFolder("uploads")
-        val session = FakeSession(
-            parameters = emptyMap(),
-            body = emptyMap(),
-            failure = IOException("malformed multipart"),
-        )
+        val session =
+            FakeSession(
+                parameters = emptyMap(),
+                body = emptyMap(),
+                failure = IOException("malformed multipart"),
+            )
 
         // Act
         val response = UploadHandler().post(uriResource(uploadsDir), emptyMap(), session)

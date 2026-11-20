@@ -24,7 +24,7 @@ fun BookFileItem(book: EBookFile, onClick: () -> Unit) {
             ext = book.file.extension,
             size = 150.dp,
             width = 100.dp,
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillWidth,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -35,7 +35,7 @@ fun BookFileItem(book: EBookFile, onClick: () -> Unit) {
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.width(100.dp)
+            modifier = Modifier.width(100.dp),
         )
     }
 }

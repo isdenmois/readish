@@ -6,13 +6,13 @@ object RecentTable {
     val URI: Uri = Uri.parse("content://com.neverland.alreaderprofs.BooksProvider/recent")
 
     object Column {
-        const val id = "id"
-        const val title = "title"
-        const val author = "author"
-        const val bookSize = "booksize"
-        const val position = "bookpos"
-        const val readTime = "param0"
-        const val path = "filename"
-        const val updatedAt = "datelast"
+        const val ID = "id"
+        const val TITLE = "title"
+        const val AUTHOR = "author"
+        const val BOOK_SIZE = "booksize"
+        const val POSITION = "bookpos"
+        const val READ_TIME = "param0"
+        const val PATH = "filename"
+        const val UPDATED_AT = "datelast"
     }
 }

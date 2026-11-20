@@ -15,7 +15,7 @@ import javax.inject.Singleton
 class MainModule {
     @Singleton
     @Provides
-    fun provideSharedPreferences(@ApplicationContext context: Context) : SharedPreferences {
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         val file = File(context.cacheDir, "sp.txt")
 
         return context.getSharedPreferences(file.name, Context.MODE_PRIVATE)

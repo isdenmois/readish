@@ -8,5 +8,5 @@ internal fun formatIpAddress(ipAddress: Int): String = "%d.%d.%d.%d".format(
     ipAddress and 0xff,
     ipAddress shr 8 and 0xff,
     ipAddress shr 16 and 0xff,
-    ipAddress shr 24 and 0xff
+    ipAddress shr 24 and 0xff,
 )

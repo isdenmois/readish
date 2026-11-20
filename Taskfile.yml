@@ -59,9 +59,9 @@ tasks:
           echo "Deleted $count APK(s)"
 
   lint:
-    desc: Run Android lint
+    desc: Run Spotless and Android lint
     cmds:
-      - ./gradlew lint
+      - ./gradlew spotlessCheck lint
 
   test:
     desc: Run JVM unit tests (feature:home, feature:transfers)

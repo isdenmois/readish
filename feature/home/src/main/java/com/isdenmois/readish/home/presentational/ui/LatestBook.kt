@@ -1,6 +1,11 @@
 package com.isdenmois.readish.home.presentational.ui
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
@@ -22,7 +27,7 @@ fun LatestBook(book: Book, onClick: () -> Unit) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .padding(start = 8.dp)
-                    .height(124.dp)
+                    .height(124.dp),
             ) {
                 Text(book.title, maxLines = 3, fontSize = 20.sp)
 
@@ -32,7 +37,7 @@ fun LatestBook(book: Book, onClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
                 LinearProgressIndicator(
                     progress = book.percent,
-                    modifier = Modifier.height(8.dp)
+                    modifier = Modifier.height(8.dp),
                 )
             }
         }

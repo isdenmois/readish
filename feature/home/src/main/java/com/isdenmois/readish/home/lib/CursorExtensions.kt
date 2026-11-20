@@ -4,7 +4,9 @@ import android.database.Cursor
 import java.io.File
 
 fun Cursor.column(which: String) = getColumnIndex(which)
+
 fun Cursor.getInt(which: String): Int = getInt(column(which))
+
 fun Cursor.getString(which: String): String = getString(column(which))
 
 fun Cursor.getFile(column: String): File {

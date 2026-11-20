@@ -13,7 +13,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 
 @Composable
-fun EbookCover(cover: Bitmap?, ext: String? = null, size: Dp, width: Dp? = null, contentScale: ContentScale = ContentScale.Crop) {
+fun EbookCover(
+    cover: Bitmap?,
+    ext: String? = null,
+    size: Dp,
+    width: Dp? = null,
+    contentScale: ContentScale = ContentScale.Crop,
+) {
     if (cover != null) {
         var modifier = Modifier.height(size)
 

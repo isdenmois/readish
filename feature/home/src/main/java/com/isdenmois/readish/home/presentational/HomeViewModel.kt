@@ -19,13 +19,15 @@ import com.isdenmois.readish.home.repository.BookRepository
 import com.isdenmois.readish.transfers.presentational.TransferActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import java.io.File
 import java.lang.Exception
 import javax.inject.Inject
-import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel
+@Inject
+constructor(
     @ApplicationContext private val applicationContext: Context,
     private val repository: BookRepository,
 ) : ViewModel() {
@@ -86,9 +88,10 @@ class HomeViewModel @Inject constructor(
             wifi.isWifiEnabled = true
         }
 
-        val intent = Intent(applicationContext, TransferActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+        val intent =
+            Intent(applicationContext, TransferActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
 
         try {
             applicationContext.startActivity(intent)
@@ -99,10 +102,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun openOnyxHome() {
-        val intent = Intent().apply {
-            component = ComponentName("com.onyx", "com.onyx.reader.main.ui.MainActivity")
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+        val intent =
+            Intent().apply {
+                component = ComponentName("com.onyx", "com.onyx.reader.main.ui.MainActivity")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
 
         try {
             applicationContext.startActivity(intent)

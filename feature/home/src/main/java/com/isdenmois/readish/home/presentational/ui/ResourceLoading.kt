@@ -21,7 +21,7 @@ fun <T> ResourceLoading(resource: Resource<T>, content: @Composable (data: T) ->
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 CircularProgressIndicator()
             }
@@ -31,7 +31,7 @@ fun <T> ResourceLoading(resource: Resource<T>, content: @Composable (data: T) ->
             Text(
                 resource.message ?: "Error",
                 color = MaterialTheme.colors.error,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             )
         }
 

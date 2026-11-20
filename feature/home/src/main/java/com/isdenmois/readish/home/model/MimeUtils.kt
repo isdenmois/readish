@@ -3,11 +3,12 @@ package com.isdenmois.readish.home.model
 import android.webkit.MimeTypeMap
 
 object MimeUtils {
-    private val mimeMap = hashMapOf(
-        "fb2" to "application/x-fictionbook",
-        "epub" to "application/epub",
-        "zip" to "application/x-fictionbook+zip",
-    )
+    private val mimeMap =
+        hashMapOf(
+            "fb2" to "application/x-fictionbook",
+            "epub" to "application/epub",
+            "zip" to "application/x-fictionbook+zip",
+        )
 
     fun getByFileName(fileName: String): String {
         val lastdot = fileName.lastIndexOf(".")

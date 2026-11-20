@@ -9,9 +9,10 @@ android {
     namespace = "com.isdenmois.readish.home"
 
     compileSdk {
-        version = release(37) {
-            minorApiLevel = 1
-        }
+        version =
+            release(37) {
+                minorApiLevel = 1
+            }
     }
 
     defaultConfig {

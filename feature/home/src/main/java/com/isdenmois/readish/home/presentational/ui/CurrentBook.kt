@@ -1,7 +1,14 @@
 package com.isdenmois.readish.home.presentational.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
@@ -33,7 +40,7 @@ fun CurrentBook(book: Book, onClick: () -> Unit) {
                     .padding(bottom = 4.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.White.copy(0.75f))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
             )
         }
 
@@ -42,12 +49,12 @@ fun CurrentBook(book: Book, onClick: () -> Unit) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
             LinearProgressIndicator(
                 progress = book.percent,
                 modifier = Modifier
-                    .height(8.dp)
+                    .height(8.dp),
             )
         }
     }

@@ -9,9 +9,10 @@ android {
     namespace = "com.isdenmois.readish"
 
     compileSdk {
-        version = release(37) {
-            minorApiLevel = 1
-        }
+        version =
+            release(37) {
+                minorApiLevel = 1
+            }
     }
 
     defaultConfig {
@@ -46,17 +47,18 @@ android {
 
     packaging {
         resources {
-            excludes += setOf(
-                "META-INF/*",
-                "META-INF/licenses/*",
-                "**/attach_hotspot_windows.dll",
-                "**/jansi.dll",
-                "META-INF/*.kotlin_module",
-                "**.kotlin_builtins",
-                "**.kotlin_metadata",
-                "/META-INF/{AL2.0,LGPL2.1}",
-                "/org/fusesource**",
-            )
+            excludes +=
+                setOf(
+                    "META-INF/*",
+                    "META-INF/licenses/*",
+                    "**/attach_hotspot_windows.dll",
+                    "**/jansi.dll",
+                    "META-INF/*.kotlin_module",
+                    "**.kotlin_builtins",
+                    "**.kotlin_metadata",
+                    "/META-INF/{AL2.0,LGPL2.1}",
+                    "/org/fusesource**",
+                )
         }
     }
 }

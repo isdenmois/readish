@@ -11,7 +11,7 @@ private val colorPalette = lightColors(
 )
 
 @Composable
-fun ReadishTheme(content: @Composable() () -> Unit) {
+fun ReadishTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colors = colorPalette,
         typography = Typography,

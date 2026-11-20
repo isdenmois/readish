@@ -39,7 +39,7 @@ fun FileCover(ext: String? = null, size: Dp, width: Dp? = null) {
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 16.dp),
             )
         }
     }

@@ -19,12 +19,12 @@ fun Icon(title: String, @DrawableRes icon: Int, onClick: () -> Unit, isLast: Boo
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .noRippleClickable(onClick)
-            .padding(start = 12.dp, end = if (isLast) 0.dp else 12.dp)
+            .padding(start = 12.dp, end = if (isLast) 0.dp else 12.dp),
     ) {
         Image(
             painter = painterResource(icon),
             contentDescription = title,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(32.dp),
         )
 
         Text(title, fontSize = 14.sp)

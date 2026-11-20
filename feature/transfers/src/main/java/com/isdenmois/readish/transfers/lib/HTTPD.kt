@@ -4,12 +4,10 @@ import com.isdenmois.readish.transfers.lib.handlers.HomeHandler
 import com.isdenmois.readish.transfers.lib.handlers.UploadHandler
 import fi.iki.elonen.router.RouterNanoHTTPD
 
-class HTTPD(
-    private val root: String,
-    private var fileUploadedListener: FileUploadedListener? = null,
-) : RouterNanoHTTPD(port) {
+class HTTPD(private val root: String, private var fileUploadedListener: FileUploadedListener? = null) :
+    RouterNanoHTTPD(PORT) {
     companion object {
-        const val port = 8083
+        const val PORT = 8083
     }
 
     init {

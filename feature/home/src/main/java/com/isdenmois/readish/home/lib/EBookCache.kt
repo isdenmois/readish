@@ -5,8 +5,11 @@ import com.isdenmois.ebookparser.EBookFile
 import java.io.File
 import javax.inject.Inject
 
-class EBookCache @Inject constructor(private val cacheManager: CacheManager) {
+class EBookCache
+@Inject
+constructor(private val cacheManager: CacheManager) {
     private val memoryCache = HashMap<String, EBookFile>()
+
     operator fun get(file: File): EBookFile? {
         val key = file.name
 
@@ -31,7 +34,7 @@ class EBookCache @Inject constructor(private val cacheManager: CacheManager) {
         }
     }
 
-    private fun EBookFile.toCache(): String = "${title}||${author}"
+    private fun EBookFile.toCache(): String = "$title||$author"
 
     private fun fromCache(file: File, value: String): EBookFile? {
         val parts = value.split("||", limit = 2)

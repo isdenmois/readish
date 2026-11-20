@@ -28,9 +28,11 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class TransfersViewModel @Inject constructor(
-    @ApplicationContext private val applicationContext: Context,
-) : ViewModel(), FileUploadedListener {
+class TransfersViewModel
+@Inject
+constructor(@ApplicationContext private val applicationContext: Context) :
+    ViewModel(),
+    FileUploadedListener {
     val addressState = mutableStateOf("")
     val qrState = mutableStateOf<ImageBitmap?>(null)
 
@@ -41,11 +43,12 @@ class TransfersViewModel @Inject constructor(
         applicationContext.getString(R.string.books_dir)
     }
 
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            checkLocalAddress()
+    private val receiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                checkLocalAddress()
+            }
         }
-    }
 
     private val server by lazy {
         HTTPD(root = uploadsDir, fileUploadedListener = this)
@@ -56,10 +59,11 @@ class TransfersViewModel @Inject constructor(
 
         enableWifi()
 
-        val filter = IntentFilter().apply {
-            addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
-            addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-        }
+        val filter =
+            IntentFilter().apply {
+                addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+                addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+            }
 
         applicationContext.registerReceiver(receiver, filter)
     }
