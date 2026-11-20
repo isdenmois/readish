@@ -1,12 +1,13 @@
 package com.isdenmois.readish.library.model
 
+import com.isdenmois.readish.ui.Page
+import com.isdenmois.readish.ui.page
+
 enum class SortField { TIME, TITLE, FILENAME }
 
 data class LibraryQuery(val sort: SortField = SortField.TIME, val ascending: Boolean = false, val filter: String = "")
 
 const val LIBRARY_PAGE_SIZE = 12
-
-data class LibraryView(val books: List<LibraryBook>, val page: Int, val pageCount: Int)
 
 fun List<LibraryBook>.applyQuery(query: LibraryQuery): List<LibraryBook> {
     val needle = query.filter.trim()
@@ -30,14 +31,5 @@ fun List<LibraryBook>.applyQuery(query: LibraryQuery): List<LibraryBook> {
     return matches.sortedWith(directed.then(byFileName))
 }
 
-fun List<LibraryBook>.view(query: LibraryQuery, page: Int, pageSize: Int = LIBRARY_PAGE_SIZE): LibraryView {
-    val matches = applyQuery(query)
-    val pageCount = maxOf(1, (matches.size + pageSize - 1) / pageSize)
-    val current = page.coerceIn(0, pageCount - 1)
-
-    return LibraryView(
-        books = matches.drop(current * pageSize).take(pageSize),
-        page = current,
-        pageCount = pageCount,
-    )
-}
+fun List<LibraryBook>.view(query: LibraryQuery, page: Int, pageSize: Int = LIBRARY_PAGE_SIZE): Page<LibraryBook> =
+    applyQuery(query).page(page, pageSize)

@@ -125,6 +125,31 @@ class LibraryQueryTest {
         assertEquals(1, filtered.size)
     }
 
+    @Test
+    fun view_appliesFilterBeforePaging() {
+        // Arrange
+        val books = (1..13).map { book("Book $it", "book-$it.fb2") }
+
+        // Act
+        val page = books.view(LibraryQuery(filter = "Book 1"), page = 0)
+
+        // Assert
+        assertEquals(5, page.items.size)
+        assertEquals(1, page.pageCount)
+    }
+
+    @Test
+    fun view_sortsBeforePaging() {
+        // Arrange
+        val books = (1..13).map { book("Book $it", "book-$it.fb2", modified = it.toLong()) }
+
+        // Act
+        val firstPage = books.view(LibraryQuery(), page = 0)
+
+        // Assert
+        assertEquals("book-13.fb2", firstPage.items.first().file.name)
+    }
+
     private fun book(title: String, fileName: String, modified: Long = 0, author: String = "Author") = LibraryBook(
         file = File(fileName),
         title = title,

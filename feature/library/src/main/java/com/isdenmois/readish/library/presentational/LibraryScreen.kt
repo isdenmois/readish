@@ -29,11 +29,11 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.isdenmois.readish.library.R
 import com.isdenmois.readish.library.model.LibraryBook
-import com.isdenmois.readish.library.model.LibraryView
 import com.isdenmois.readish.library.model.SortField
 import com.isdenmois.readish.library.model.view
 import com.isdenmois.readish.library.presentational.ui.LibraryBookItem
 import com.isdenmois.readish.ui.LoadState
+import com.isdenmois.readish.ui.Page
 
 @Composable
 fun LibraryScreen(onBack: () -> Unit, vm: LibraryViewModel = hiltViewModel()) {
@@ -152,11 +152,11 @@ private fun Controls(state: LibraryUiState, onSort: (SortField) -> Unit, onFilte
 }
 
 @Composable
-private fun Grid(books: List<LibraryBook>, view: LibraryView, onOpenBook: (LibraryBook) -> Unit) {
+private fun Grid(books: List<LibraryBook>, view: Page<LibraryBook>, onOpenBook: (LibraryBook) -> Unit) {
     when {
         books.isEmpty() -> EmptyState(stringResource(R.string.no_books), hint = null)
 
-        view.books.isEmpty() ->
+        view.items.isEmpty() ->
             EmptyState(
                 title = stringResource(R.string.no_matches),
                 hint = stringResource(R.string.no_matches_hint),
@@ -164,7 +164,7 @@ private fun Grid(books: List<LibraryBook>, view: LibraryView, onOpenBook: (Libra
 
         else ->
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                view.books.chunked(GRID_COLUMNS).forEach { row ->
+                view.items.chunked(GRID_COLUMNS).forEach { row ->
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth(),
@@ -212,7 +212,7 @@ private fun EmptyState(title: String, hint: String?) {
 }
 
 @Composable
-private fun Pager(view: LibraryView?, onPreviousPage: () -> Unit, onNextPage: () -> Unit) {
+private fun Pager(view: Page<LibraryBook>?, onPreviousPage: () -> Unit, onNextPage: () -> Unit) {
     val page = view?.page ?: 0
     val pageCount = view?.pageCount ?: 1
 
