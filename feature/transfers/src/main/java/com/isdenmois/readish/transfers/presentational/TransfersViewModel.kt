@@ -61,6 +61,8 @@ constructor(@ApplicationContext private val applicationContext: Context) :
     init {
         server.start()
 
+        enableWifi()
+
         val filter =
             IntentFilter().apply {
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
@@ -74,6 +76,23 @@ constructor(@ApplicationContext private val applicationContext: Context) :
         super.onCleared()
         server.stop()
         applicationContext.unregisterReceiver(receiver)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun enableWifi() {
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+
+        if (wifiManager.wifiState == WifiManager.WIFI_STATE_ENABLED) {
+            return
+        }
+
+        // Android 10+ ignores this unless the OEM allows it; the screen keeps
+        // the "Open Wi-Fi settings" fallback for those devices.
+        try {
+            wifiManager.setWifiEnabled(true)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
     }
 
     fun openWifiSettings() {
