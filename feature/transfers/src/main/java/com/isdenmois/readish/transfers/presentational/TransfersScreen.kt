@@ -14,13 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun TransfersScreen() {
-    val vm: TransfersViewModel = viewModel()
-    val address by vm.addressState
-    val qr by vm.qrState
+fun TransfersScreen(vm: TransfersViewModel = hiltViewModel()) {
+    val state by vm.uiState.collectAsStateWithLifecycle()
+    val address = state.address
+    val qr = state.qr
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -30,7 +31,7 @@ fun TransfersScreen() {
             .background(Color.White),
     ) {
         if (qr != null) {
-            Image(bitmap = qr!!, contentDescription = address, modifier = Modifier.size(512.dp))
+            Image(bitmap = qr, contentDescription = address, modifier = Modifier.size(512.dp))
         }
 
         Text(address, fontSize = 32.sp)

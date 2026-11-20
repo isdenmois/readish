@@ -11,7 +11,6 @@ import android.graphics.Color.WHITE
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.widget.Toast
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
@@ -23,6 +22,10 @@ import com.isdenmois.readish.transfers.lib.formatIpAddress
 import com.isdenmois.readish.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.io.File
 import javax.inject.Inject
 
@@ -31,8 +34,8 @@ class TransfersViewModel
 @Inject
 constructor(@ApplicationContext private val applicationContext: Context) :
     ViewModel() {
-    val addressState = mutableStateOf("")
-    val qrState = mutableStateOf<ImageBitmap?>(null)
+    private val _uiState = MutableStateFlow(TransfersUiState())
+    val uiState: StateFlow<TransfersUiState> = _uiState.asStateFlow()
 
     private val size = 512
     private val port = UploadServer.PORT
@@ -77,18 +80,19 @@ constructor(@ApplicationContext private val applicationContext: Context) :
         val address = getIpAddressInLocalNetwork()
 
         if (address.isBlank() || address == "0.0.0.0") {
-            addressState.value = ""
-            qrState.value = null
+            _uiState.value = TransfersUiState()
             return
         }
 
-        addressState.value = "http://$address:$port"
+        val url = "http://$address:$port"
 
         try {
-            qrState.value = getNetworkQR(addressState.value)?.asImageBitmap()
+            val qr = getNetworkQR(url)?.asImageBitmap()
+
+            _uiState.update { it.copy(address = url, qr = qr) }
         } catch (e: Exception) {
             e.printStackTrace()
-            qrState.value = null
+            _uiState.update { it.copy(address = url, qr = null) }
         }
     }
 

@@ -2,26 +2,24 @@ package com.isdenmois.readish.home.presentational
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Context.WIFI_SERVICE
 import android.content.Intent
 import android.net.Uri
-import android.net.wifi.WifiManager
 import android.widget.Toast
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.ebookparser.EBookParser
-import com.isdenmois.readish.home.model.Book
+import com.isdenmois.readish.home.model.LoadState
 import com.isdenmois.readish.home.model.MimeUtils
-import com.isdenmois.readish.home.model.Resource
 import com.isdenmois.readish.home.repository.BookRepository
-import com.isdenmois.readish.transfers.presentational.TransferActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,27 +29,26 @@ constructor(
     @ApplicationContext private val applicationContext: Context,
     private val repository: BookRepository,
 ) : ViewModel() {
-    var bookList = mutableStateOf<Resource<List<Book>>>(Resource.loading(null))
-    var fileList = mutableStateOf<Resource<List<EBookFile>>>(Resource.loading(null))
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
         EBookParser.cacheDirectory = applicationContext.cacheDir
     }
 
     fun loadBooks() {
-        bookList.value = Resource.loading()
-        fileList.value = Resource.loading()
+        _uiState.value = HomeUiState()
 
         viewModelScope.launch {
-            val books = repository.getCurrentBooks()
+            val books = loadState { repository.getCurrentBooks() }
 
-            bookList.value = Resource.success(books)
+            _uiState.update { it.copy(books = books) }
         }
 
         viewModelScope.launch {
-            val files = repository.getLatestAddedBooks()
+            val latest = loadState { repository.getLatestAddedBooks() }
 
-            fileList.value = Resource.success(files)
+            _uiState.update { it.copy(latest = latest) }
         }
     }
 
@@ -71,26 +68,6 @@ constructor(
             packageManager.getLaunchIntentForPackage("com.neverland.alreaderprofs")?.apply {
                 setDataAndType(uri, type)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-        try {
-            applicationContext.startActivity(intent)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(applicationContext, "Can't start application", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun openTransfers() {
-        val wifi = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-
-        if (!wifi.isWifiEnabled) {
-            wifi.isWifiEnabled = true
-        }
-
-        val intent =
-            Intent(applicationContext, TransferActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
 
         try {
@@ -124,5 +101,13 @@ constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private suspend fun <T> loadState(block: suspend () -> T): LoadState<T> = try {
+        LoadState.Success(block())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        LoadState.Error(e.message ?: "Something went wrong")
     }
 }

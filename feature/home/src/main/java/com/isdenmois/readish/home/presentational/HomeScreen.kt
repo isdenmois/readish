@@ -20,22 +20,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.home.R
 import com.isdenmois.readish.home.model.Book
 import com.isdenmois.readish.home.presentational.ui.BookFileItem
 import com.isdenmois.readish.home.presentational.ui.CurrentBook
 import com.isdenmois.readish.home.presentational.ui.LatestBook
-import com.isdenmois.readish.home.presentational.ui.ResourceLoading
+import com.isdenmois.readish.home.presentational.ui.LoadStateContent
 import com.isdenmois.readish.ui.Icon
 import com.isdenmois.readish.ui.noRippleClickable
 
 @Composable
-fun HomeScreen() {
-    val vm: HomeViewModel = viewModel()
-    val bookList by vm.bookList
-    val fileList by vm.fileList
+fun HomeScreen(onOpenTransfers: () -> Unit, vm: HomeViewModel = hiltViewModel()) {
+    val state by vm.uiState.collectAsStateWithLifecycle()
+
+    LifecycleResumeEffect(Unit) {
+        vm.loadBooks()
+
+        onPauseOrDispose { }
+    }
 
     Column(modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp)) {
         Row {
@@ -59,19 +65,19 @@ fun HomeScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ResourceLoading(resource = bookList) { books ->
+        LoadStateContent(state.books) { books ->
             MyBooks(books, vm)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Row(modifier = Modifier.noRippleClickable { vm.openTransfers() }) {
+        Row(modifier = Modifier.noRippleClickable { onOpenTransfers() }) {
             Text("Latest added", fontSize = 32.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ResourceLoading(resource = fileList) { files ->
+        LoadStateContent(state.latest) { files ->
             LatestAdded(files, vm)
         }
     }

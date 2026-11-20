@@ -11,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.isdenmois.readish.home.model.Resource
-import com.isdenmois.readish.home.model.Status
+import com.isdenmois.readish.home.model.LoadState
 
 @Composable
-fun <T> ResourceLoading(resource: Resource<T>, content: @Composable (data: T) -> Unit) {
-    when (resource.status) {
-        Status.LOADING -> {
+fun <T> LoadStateContent(state: LoadState<T>, content: @Composable (data: T) -> Unit) {
+    when (state) {
+        LoadState.Loading -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -27,16 +26,16 @@ fun <T> ResourceLoading(resource: Resource<T>, content: @Composable (data: T) ->
             }
         }
 
-        Status.ERROR -> {
+        is LoadState.Error -> {
             Text(
-                resource.message ?: "Error",
+                state.message,
                 color = MaterialTheme.colors.error,
                 modifier = Modifier.padding(16.dp),
             )
         }
 
-        Status.SUCCESS -> {
-            content(resource.data!!)
+        is LoadState.Success -> {
+            content(state.data)
         }
     }
 }

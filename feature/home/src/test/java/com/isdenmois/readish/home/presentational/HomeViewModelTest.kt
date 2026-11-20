@@ -3,7 +3,7 @@ package com.isdenmois.readish.home.presentational
 import android.content.Context
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.readish.home.model.Book
-import com.isdenmois.readish.home.model.Status
+import com.isdenmois.readish.home.model.LoadState
 import com.isdenmois.readish.home.repository.BookRepository
 import io.mockk.coEvery
 import io.mockk.every
@@ -49,8 +49,8 @@ class HomeViewModelTest {
         viewModel.loadBooks()
 
         // Assert
-        assertEquals(Status.LOADING, viewModel.bookList.value.status)
-        assertEquals(Status.LOADING, viewModel.fileList.value.status)
+        assertEquals(LoadState.Loading, viewModel.uiState.value.books)
+        assertEquals(LoadState.Loading, viewModel.uiState.value.latest)
     }
 
     @Test
@@ -67,10 +67,25 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         // Assert
-        assertEquals(Status.SUCCESS, viewModel.bookList.value.status)
-        assertEquals(listOf(book), viewModel.bookList.value.data)
-        assertEquals(Status.SUCCESS, viewModel.fileList.value.status)
-        assertEquals(listOf(file), viewModel.fileList.value.data)
+        assertEquals(LoadState.Success(listOf(book)), viewModel.uiState.value.books)
+        assertEquals(LoadState.Success(listOf(file)), viewModel.uiState.value.latest)
+    }
+
+    @Test
+    fun loadBooks_reportsRepositoryFailure() = runTest {
+        // Arrange
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        coEvery { repository.getCurrentBooks(4) } throws IllegalStateException("provider unavailable")
+        coEvery { repository.getLatestAddedBooks(6) } returns emptyList()
+        val viewModel = HomeViewModel(context, repository)
+
+        // Act
+        viewModel.loadBooks()
+        advanceUntilIdle()
+
+        // Assert
+        assertEquals(LoadState.Error("provider unavailable"), viewModel.uiState.value.books)
+        assertEquals(LoadState.Success(emptyList<EBookFile>()), viewModel.uiState.value.latest)
     }
 
     private fun stubRepository(books: List<Book>, files: List<EBookFile>) {
