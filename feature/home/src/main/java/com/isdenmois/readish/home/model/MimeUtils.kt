@@ -15,17 +15,13 @@ object MimeUtils {
         if (lastdot > 0) {
             val ext = fileName.substring(lastdot + 1).lowercase()
 
-            if (mimeMap.containsKey(ext)) {
-                return mimeMap[ext]!!
-            }
+            mimeMap[ext]?.let { return it }
 
-            val type = MimeTypeMap.getSingleton().getExtensionFromMimeType(ext)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
 
             if (type != null) {
                 return type
             }
-
-            if (ext == "fb2") return "application/x-fictionbook"
         }
 
         return "*/*"

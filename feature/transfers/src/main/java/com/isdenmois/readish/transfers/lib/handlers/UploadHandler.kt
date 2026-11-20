@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import com.isdenmois.readish.transfers.lib.FileUploadedListener
 import com.isdenmois.readish.transfers.lib.FixedResponse
+import com.isdenmois.readish.transfers.lib.uploadTarget
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.router.RouterNanoHTTPD
 import java.io.File
@@ -29,7 +30,7 @@ class UploadHandler : RouterNanoHTTPD.DefaultHandler() {
 
             files.forEach { (key, tmpPath) ->
                 val fileName = session.parameters[key]!![0]
-                val output = File(uploadsDir, fileName)
+                val output = uploadTarget(File(uploadsDir), fileName)
                 val tmp = File(tmpPath)
 
                 tmp.inputStream().copyTo(output.outputStream())

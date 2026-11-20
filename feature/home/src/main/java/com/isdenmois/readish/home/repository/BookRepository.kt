@@ -70,7 +70,11 @@ class BookRepository @Inject constructor(
         var book = cache[file]
 
         if (book == null) {
-            book = EBookParser.parseBook(file)
+            book = try {
+                EBookParser.parseBook(file)
+            } catch (e: Exception) {
+                null
+            }
             cache.set(book)
         }
 

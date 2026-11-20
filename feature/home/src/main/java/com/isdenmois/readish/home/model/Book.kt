@@ -13,7 +13,7 @@ data class Book(
     val file: File,
     val cover: Bitmap?,
 ) {
-    val percent = position.toFloat() / size
+    val percent = if (size > 0) (position.toFloat() / size).coerceIn(0f, 1f) else 0f
     val page = position / 1024 + 1
     val pages = size / 1024 + 1
 }

@@ -20,6 +20,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.isdenmois.readish.transfers.lib.FileUploadedListener
 import com.isdenmois.readish.transfers.lib.HTTPD
+import com.isdenmois.readish.transfers.lib.formatIpAddress
 import com.isdenmois.readish.transfers.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -91,14 +92,8 @@ class TransfersViewModel @Inject constructor(
 
     private fun getIpAddressInLocalNetwork(): String {
         val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
-        val ipAddress = wifiManager.connectionInfo.ipAddress
 
-        return "%d.%d.%d.%d".format(
-            ipAddress and 0xff,
-            ipAddress shr 8 and 0xff,
-            ipAddress shr 16 and 0xff,
-            ipAddress shr 24 and 0xff
-        )
+        return formatIpAddress(wifiManager.connectionInfo.ipAddress)
     }
 
     private fun getNetworkQR(str: String): Bitmap? {

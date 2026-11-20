@@ -16,7 +16,7 @@ class EBookCache @Inject constructor(private val cacheManager: CacheManager) {
         val cached = cacheManager.get(key)
 
         cached?.let {
-            return fromCache(file, cached)
+            return fromCache(file, it)
         }
 
         return null
@@ -33,8 +33,12 @@ class EBookCache @Inject constructor(private val cacheManager: CacheManager) {
 
     private fun EBookFile.toCache(): String = "${title}||${author}"
 
-    private fun fromCache(file: File, value: String): EBookFile {
-        val (title, author) = value.split("||")
+    private fun fromCache(file: File, value: String): EBookFile? {
+        val parts = value.split("||", limit = 2)
+
+        if (parts.size != 2) return null
+
+        val (title, author) = parts
 
         return EBookFile(
             title = title,
