@@ -4,9 +4,10 @@ Readish is an Android home-screen app for Onyx Boox e-readers. It shows reading 
 
 ## Build & verify
 
-- JDK 11 is required (Gradle 7.2 + AGP 7.1.3). README's `export JAVA_HOME=/usr/lib64/jvm/java-11`.
-- Build: `./gradlew :app:assembleDebug`; APK lands in `app/build/outputs/apk/debug/app-debug.apk` (compileSdk 31, minSdk 28).
-- `Taskfile.yml` wraps the common jobs: `task build`, `task lint` (ktlint + Android lint), `task test`. Use the Gradle commands directly if Go Task isn't installed.
+- JDK 11 is required (Gradle 7.2 + AGP 7.1.3); `mise.toml` pins `java = "11"` and `task = "3"`.
+- `task build` produces the signed release APK at `app/build/outputs/apk/release/app-release.apk` (compileSdk 31, minSdk 28) and prints its size.
+- Debug builds are plain Gradle: `./gradlew :app:assembleDebug` → `app/build/outputs/apk/debug/app-debug.apk`.
+- `Taskfile.yml` wraps the common jobs: `task build`, `task lint` (ktlint + Android lint), `task test`, `task version:show`, `task clean:apk`. Use the Gradle commands directly if Go Task isn't installed.
 - There are no tests and no CI. Do not claim a test suite; verify with `assembleDebug`.
 - ktlint runs on every subproject with `ignoreFailures = true`, so style never fails the build. Format with `./gradlew ktlintFormat`. Rules: 4-space indent, 120 columns (`.editorconfig`).
 - ktlint's filter includes only `**/kotlin/**`, while all sources live under `src/main/java`; expect ktlint to skip most files.
@@ -14,10 +15,13 @@ Readish is an Android home-screen app for Onyx Boox e-readers. It shows reading 
 
 ## Release & signing
 
-- `fastlane deploy` = bump `versionCode`, commit `app/build.gradle` ("Version Bump"), build a signed release APK, upload it to `SERVER_URL`. It creates a git commit and network upload, so don't run it unless asked.
-- Export `SERVER_URL`, `KEY_STORE_FILE`, `KEY_ALIAS`, `KEY_PASSWORD` before release lanes (template in `.env.defaults`). Fastlane does not load `.env` by itself.
-- Signing is injected as `android.injected.signing.*` Gradle properties by `fastlane/Fastfile`; there is no `signingConfig` block.
-- Partial lanes: `fastlane build_apk` (release build only), `fastlane version_increment`.
+- `task deploy` (`scripts/deploy.sh`) requires a clean tree, then bumps `versionCode` and `versionName` in `app/build.gradle`, builds the signed release APK, commits the bump ("Version Bump"), and uploads it to `SERVER_URL`. It creates a git commit and a network upload, so don't run it unless asked.
+- Any failure after the bump restores the pre-deploy tree: a failed build checks out `app/build.gradle`, a failed upload runs `git reset --hard HEAD~1`. Re-running deploy therefore produces the same version.
+- Copy `.env.defaults` to `.env`; Task loads it via `dotenv` (no manual export). Missing variables stop the task through `requires`.
+- `.env` beats exported shell variables, so override a single value with Task CLI vars: `task build KEY_STORE_FILE=/path/to.jks`.
+- `task build` needs `KEY_STORE_FILE`, `KEY_ALIAS`, `KEY_PASSWORD`; `task upload` needs `SERVER_URL` and uploads `app/build/outputs/apk/release/app-release.apk` unless `APK=path` is given.
+- Signing is injected as `android.injected.signing.*` Gradle properties by `Taskfile.yml`; there is no `signingConfig` block.
+- Partial tasks: `task build` (release build only), `task upload`, `task version:bump` (edit only, no commit), `task clean:apk` (deletes every APK in the repo).
 
 ## Dependencies
 
