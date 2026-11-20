@@ -35,7 +35,7 @@ class MimeUtilsTest {
     @Test
     fun knownSystemExtension_mapsFromSystemMimeTypeMap() {
         // Arrange
-        shadowOf(MimeTypeMap.getSingleton()).addExtensionMimeTypMapping("pdf", "application/pdf")
+        shadowOf(MimeTypeMap.getSingleton()).addExtensionMimeTypeMapping("pdf", "application/pdf")
 
         // Act
         val mime = MimeUtils.getByFileName("book.pdf")

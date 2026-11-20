@@ -3,8 +3,8 @@ package com.isdenmois.readish.home.repository
 import android.content.Context
 import com.isdenmois.ebookparser.EBookFile
 import com.isdenmois.ebookparser.EBookParser
-import com.isdenmois.readish.home.R
 import com.isdenmois.readish.home.lib.*
+import com.isdenmois.readish.ui.R
 import com.isdenmois.readish.home.model.Book
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

@@ -2,6 +2,7 @@ package com.isdenmois.readish.transfers.presentational
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.WIFI_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
@@ -10,7 +11,6 @@ import android.graphics.Color.WHITE
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -21,7 +21,7 @@ import com.google.zxing.common.BitMatrix
 import com.isdenmois.readish.transfers.lib.FileUploadedListener
 import com.isdenmois.readish.transfers.lib.HTTPD
 import com.isdenmois.readish.transfers.lib.formatIpAddress
-import com.isdenmois.readish.transfers.R
+import com.isdenmois.readish.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -91,7 +91,7 @@ class TransfersViewModel @Inject constructor(
     }
 
     private fun getIpAddressInLocalNetwork(): String {
-        val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
 
         return formatIpAddress(wifiManager.connectionInfo.ipAddress)
     }
@@ -120,7 +120,7 @@ class TransfersViewModel @Inject constructor(
     }
 
     private fun enableWifi() {
-        val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
 
         if (!wifiManager.isWifiEnabled) {
             wifiManager.isWifiEnabled = true
@@ -128,7 +128,7 @@ class TransfersViewModel @Inject constructor(
     }
 
     private fun disableWifi() {
-        val wifiManager = applicationContext.getSystemService(ComponentActivity.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
 
         if (wifiManager.isWifiEnabled) {
             wifiManager.isWifiEnabled = false

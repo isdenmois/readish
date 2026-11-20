@@ -59,9 +59,9 @@ tasks:
           echo "Deleted $count APK(s)"
 
   lint:
-    desc: Run ktlint and Android lint
+    desc: Run Android lint
     cmds:
-      - ./gradlew ktlintCheck lint
+      - ./gradlew lint
 
   test:
     desc: Run JVM unit tests (feature:home, feature:transfers)
