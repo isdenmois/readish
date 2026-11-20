@@ -13,14 +13,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.isdenmois.ebookparser.EBookFile
@@ -32,6 +33,7 @@ import com.isdenmois.readish.home.presentational.ui.LatestBook
 import com.isdenmois.readish.home.presentational.ui.LoadStateContent
 import com.isdenmois.readish.ui.Icon
 import com.isdenmois.readish.ui.noRippleClickable
+import java.io.File
 
 @Composable
 fun HomeScreen(onOpenTransfers: () -> Unit, vm: HomeViewModel = hiltViewModel()) {
@@ -43,61 +45,94 @@ fun HomeScreen(onOpenTransfers: () -> Unit, vm: HomeViewModel = hiltViewModel())
         onPauseOrDispose { }
     }
 
+    HomeContent(
+        state = state,
+        onOpenTransfers = onOpenTransfers,
+        onOpenCurrentBook = vm::openAlReader,
+        onOpenBook = vm::openBook,
+        onShowBrightness = vm::showSystemBrightnessDialog,
+        onOpenOnyxHome = vm::openOnyxHome,
+    )
+}
+
+@Composable
+fun HomeContent(
+    state: HomeUiState,
+    onOpenTransfers: () -> Unit,
+    onOpenCurrentBook: () -> Unit,
+    onOpenBook: (File) -> Unit,
+    onShowBrightness: () -> Unit,
+    onOpenOnyxHome: () -> Unit,
+) {
     Column(modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp)) {
-        Row {
-            Text("My Books", fontSize = 32.sp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.my_books),
+                style = MaterialTheme.typography.displaySmall,
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(
-                title = "Brightness",
+                title = stringResource(R.string.brightness),
                 icon = R.drawable.ic_lightbulb,
-                onClick = { vm.showSystemBrightnessDialog() },
+                onClick = onShowBrightness,
             )
 
             Icon(
-                title = "Applications",
+                title = stringResource(R.string.applications),
                 icon = R.drawable.ic_apps,
                 isLast = true,
-                onClick = { vm.openOnyxHome() },
+                onClick = onOpenOnyxHome,
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         LoadStateContent(state.books) { books ->
-            MyBooks(books, vm)
+            if (books.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.no_books),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            } else {
+                MyBooks(books, onOpenCurrentBook, onOpenBook)
+            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Row(modifier = Modifier.noRippleClickable { onOpenTransfers() }) {
-            Text("Latest added", fontSize = 32.sp)
+            Text(
+                text = stringResource(R.string.latest_added),
+                style = MaterialTheme.typography.displaySmall,
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         LoadStateContent(state.latest) { files ->
-            LatestAdded(files, vm)
+            LatestAdded(files, onOpenBook)
         }
     }
 }
 
 @Composable
-private fun LatestAdded(files: List<EBookFile>, vm: HomeViewModel) {
+private fun LatestAdded(files: List<EBookFile>, onOpenBook: (File) -> Unit) {
     LazyRow {
         itemsIndexed(files) { index, item ->
             if (index != 0) {
                 Spacer(modifier = Modifier.width(24.dp))
             }
 
-            BookFileItem(item, onClick = { vm.openBook(item.file) })
+            BookFileItem(item, onClick = { onOpenBook(item.file) })
         }
     }
 }
 
 @Composable
-fun MyBooks(books: List<Book>, vm: HomeViewModel) {
+fun MyBooks(books: List<Book>, onOpenCurrentBook: () -> Unit, onOpenBook: (File) -> Unit) {
     if (books.isEmpty()) {
         return
     }
@@ -109,10 +144,10 @@ fun MyBooks(books: List<Book>, vm: HomeViewModel) {
         Column(modifier = Modifier.weight(1f)) {
             Box(
                 modifier = Modifier
-                    .border(0.5.dp, Color.Gray)
+                    .border(0.5.dp, MaterialTheme.colorScheme.outline)
                     .padding(24.dp),
             ) {
-                CurrentBook(book = current, onClick = { vm.openAlReader() })
+                CurrentBook(book = current, onClick = onOpenCurrentBook)
             }
         }
 
@@ -126,7 +161,7 @@ fun MyBooks(books: List<Book>, vm: HomeViewModel) {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                LatestBook(book, onClick = { vm.openBook(book.file) })
+                LatestBook(book, onClick = { onOpenBook(book.file) })
             }
         }
     }

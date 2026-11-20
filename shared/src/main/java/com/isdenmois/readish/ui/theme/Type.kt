@@ -1,30 +1,47 @@
 package com.isdenmois.readish.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
 val Typography =
     Typography(
-        body1 =
+        displaySmall =
         TextStyle(
-            fontFamily = FontFamily.Default,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Normal,
+            fontSize = 36.sp,
+            lineHeight = 42.sp,
+            letterSpacing = (-0.5).sp,
+        ),
+        headlineMedium =
+        TextStyle(
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Medium,
+            fontSize = 28.sp,
+            lineHeight = 34.sp,
+        ),
+        titleMedium =
+        TextStyle(
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Medium,
+            fontSize = 18.sp,
+            lineHeight = 24.sp,
+        ),
+        bodyLarge =
+        TextStyle(
+            fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
+            lineHeight = 24.sp,
         ),
-        /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
-    ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    )
-         */
+        labelMedium =
+        TextStyle(
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            lineHeight = 18.sp,
+        ),
     )

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isdenmois.ebookparser.EBookParser
+import com.isdenmois.readish.home.R
 import com.isdenmois.readish.home.model.LoadState
 import com.isdenmois.readish.home.model.MimeUtils
 import com.isdenmois.readish.home.repository.BookRepository
@@ -74,7 +75,11 @@ constructor(
             applicationContext.startActivity(intent)
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(applicationContext, "Can't start application", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                applicationContext.getString(R.string.cant_start_application),
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 
@@ -89,7 +94,11 @@ constructor(
             applicationContext.startActivity(intent)
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(applicationContext, "Can't start application", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                applicationContext.getString(R.string.cant_start_application),
+                Toast.LENGTH_SHORT,
+            ).show()
         }
     }
 

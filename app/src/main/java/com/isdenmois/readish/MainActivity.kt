@@ -4,12 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,9 +35,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         setContent {
             ReadishTheme {
-                Surface(color = MaterialTheme.colors.background) {
+                Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     val currentHomeIntent = homeIntent
 
@@ -43,7 +49,13 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    NavHost(navController = navController, startDestination = HomeRoute) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = HomeRoute,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding(),
+                    ) {
                         composable<HomeRoute> {
                             HomeScreen(
                                 onOpenTransfers = {
@@ -52,7 +64,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<TransfersRoute> {
-                            TransfersScreen()
+                            TransfersScreen(onBack = { navController.popBackStack() })
                         }
                     }
                 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 
 @Composable
@@ -29,7 +30,7 @@ fun EbookCover(
 
         Image(
             painter = bitmapPainter(cover),
-            contentDescription = "Loading...",
+            contentDescription = stringResource(R.string.book_cover),
             modifier = modifier,
             contentScale = contentScale,
         )

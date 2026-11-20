@@ -17,9 +17,9 @@ import androidx.lifecycle.ViewModel
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
+import com.isdenmois.readish.transfers.R
 import com.isdenmois.readish.transfers.lib.UploadServer
 import com.isdenmois.readish.transfers.lib.formatIpAddress
-import com.isdenmois.readish.ui.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.io.File
 import javax.inject.Inject
+import com.isdenmois.readish.ui.R as UiR
 
 @HiltViewModel
 class TransfersViewModel
@@ -41,7 +42,7 @@ constructor(@ApplicationContext private val applicationContext: Context) :
     private val port = UploadServer.PORT
 
     private val uploadsDir by lazy {
-        applicationContext.getString(R.string.books_dir)
+        applicationContext.getString(UiR.string.books_dir)
     }
 
     private val receiver =
@@ -142,6 +143,10 @@ constructor(@ApplicationContext private val applicationContext: Context) :
     }
 
     private fun onFileUploaded(file: File) {
-        Toast.makeText(applicationContext, "File `${file.name}` uploaded", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            applicationContext,
+            applicationContext.getString(R.string.uploaded_file, file.name),
+            Toast.LENGTH_SHORT,
+        ).show()
     }
 }

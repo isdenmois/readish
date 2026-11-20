@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="my_books">My Books</string>
+    <string name="latest_added">Latest added</string>
+    <string name="brightness">Brightness</string>
+    <string name="applications">Applications</string>
+    <string name="no_books">No books yet</string>
+    <string name="cant_start_application">Can\'t start application</string>
+</resources>

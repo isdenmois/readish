@@ -5,39 +5,65 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.isdenmois.readish.transfers.R
 
 @Composable
-fun TransfersScreen(vm: TransfersViewModel = hiltViewModel()) {
+fun TransfersScreen(onBack: () -> Unit, vm: TransfersViewModel = hiltViewModel()) {
     val state by vm.uiState.collectAsStateWithLifecycle()
-    val address = state.address
-    val qr = state.qr
 
+    TransfersContent(state = state, onBack = onBack)
+}
+
+@Composable
+fun TransfersContent(state: TransfersUiState, onBack: () -> Unit) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(24.dp),
     ) {
-        if (qr != null) {
-            Image(bitmap = qr, contentDescription = address, modifier = Modifier.size(512.dp))
+        TextButton(onClick = onBack, modifier = Modifier.align(Alignment.Start)) {
+            Text(stringResource(R.string.back))
         }
 
-        Text(address, fontSize = 32.sp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+        ) {
+            state.qr?.let { qr ->
+                Image(
+                    bitmap = qr,
+                    contentDescription = state.address,
+                    modifier = Modifier.size(512.dp),
+                )
+            }
 
-        if (address.isBlank()) {
-            Text("WiFi is turning on")
+            Text(state.address, style = MaterialTheme.typography.headlineMedium)
+
+            if (state.address.isBlank()) {
+                Text(
+                    text = stringResource(R.string.wifi_turning_on),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

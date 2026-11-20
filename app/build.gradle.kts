@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -46,6 +47,10 @@ android {
         compose = true
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+
     packaging {
         resources {
             excludes +=
@@ -68,7 +73,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -84,10 +89,19 @@ dependencies {
 
     debugImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(project(":shared"))
     implementation(project(":feature:home"))
     implementation(project(":feature:transfers"))
+
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.ebookparser)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
 }
 
 configurations.named("implementation") {

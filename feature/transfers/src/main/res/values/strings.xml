@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Back</string>
+    <string name="wifi_turning_on">WiFi is turning on</string>
+    <string name="uploaded_file">File `%1$s` uploaded</string>
+</resources>
