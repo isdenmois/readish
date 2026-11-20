@@ -1,6 +1,6 @@
 # Readish
 
-Android home-screen app for Onyx Boox e-readers: shows the stock reader's recent books and accepts book uploads over Wi-Fi.
+Android home-screen app for Onyx Boox e-readers: shows the stock reader's recent books, lists the device's launchable apps, and accepts book uploads over Wi-Fi.
 
 Kotlin · Jetpack Compose (Material 3) · Hilt · KSP · Ktor · Navigation Compose.
 
